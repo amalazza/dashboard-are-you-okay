@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Aktivitas Pencegahan {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-profile">
+                    <div class="card-body">
+                        <!-- <h6 class="card-category text-gray">Error 403</h6> -->
+                        <h4 class="card-title">
+                            Tambah Aktivitas Pencegahan Baru
+                        </h4>
+                        <a href="page-pencegahan-tambah.html" class="btn btn-primary btn-round">
+                          <span class="material-icons">
+                          add
+                          </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #00acc1);">
+                  <h4 class="card-title ">Daftar Aktivitas Pencegahan</h4>
+                  <p class="card-category"> *modifikasi aktivitas pencegahan terdapat di kolom aksi</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          No
+                        </th>
+                        <th>
+                          Judul
+                        </th>
+                        <th>
+                          Detail
+                        </th>
+                        <th>
+                          Aksi
+                        </th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            1
+                          </td>
+                          <td>
+                            Tips Olahraga Untuk Menghindari Depresi
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-detail.html">Detail</a>
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-edit.html">Edit</a> | <a class="link" href="page-pencegahan-hapus.html">Hapus</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            2
+                          </td>
+                          <td>
+                            Membaca Untuk Menghindari Depresi
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-detail.html">Detail</a>
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-edit.html">Edit</a> | <a class="link" href="page-pencegahan-hapus.html">Hapus</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            3
+                          </td>
+                          <td>
+                            Memasak Untuk Menghindari Depresi
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-detail.html">Detail</a>
+                          </td>
+                          <td>
+                            <a class="link" href="page-pencegahan-edit.html">Edit</a> | <a class="link" href="page-pencegahan-hapus.html">Hapus</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

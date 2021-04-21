@@ -1,0 +1,111 @@
+    <div class="sidebar" data-color="azure" style="background-color: #fff">
+      <div class="logo">
+        <a target="_blank" rel="noopener noreferrer" 
+           target="_blank" rel="noopener noreferrer" 
+           href="/" class="simple-text logo-normal">
+           <img src="/static/assets/img/13.png" alt="" style="width: 100%; height: 70px">
+          
+        </a>
+      </div>
+      {% if user.is_authenticated %}
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item {% if 'index' == segment %} active {% endif %}">
+            <a class="nav-link" href="/">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'page-pengguna' in segment %} active {% endif %}">
+            <a class="nav-link" href="/page-pengguna.html">
+              <i class="material-icons">person</i>
+              <p>Pengguna</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">
+              <i class="material-icons">content_paste</i>
+              <p>Layanan App</p>
+            </a>
+            <ul style="list-style-type: none;">
+              <li class="nav-item {% if 'page-kuesioner' in segment %} active {% endif %}">
+                <a href="" class="nav-link" id="navbarDropdownKuesioner" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="material-icons">dynamic_form</i>
+                  <p>Kuesioner</p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownKuesioner">
+                  <a class="dropdown-item" href="/page-kuesioner-pertanyaan.html">Pertanyaan</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/page-kuesioner-jawaban.html">Jawaban</a>
+                </div>
+              </li>
+              <li class="nav-item {% if 'page-aktivitas' in segment %} active {% endif %}">
+                <a href="" class="nav-link" id="navbarDropdownAktivitas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="material-icons">accessibility</i>
+                  <p>Aktivitas</p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAktivitas">
+                  <a class="dropdown-item" href="/page-aktivitas-pencegahan.html">Pencegahan</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/page-aktivitas-penanganan.html">Penanganan</a>
+                </div>
+              </li>
+              <li class="nav-item {% if 'page-artikel' in segment %} active {% endif %}">
+                <a class="nav-link" href="/page-artikel.html">
+                  <i class="material-icons">article</i>
+                  <p>Artikel</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+
+
+          <!-- <li class="nav-item {% if 'ui-icons' in segment %} active {% endif %}">
+            <a class="nav-link" href="/ui-icons.html">
+              <i class="material-icons">bubble_chart</i>
+              <p>Icons</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-maps' in segment %} active {% endif %}">
+            <a class="nav-link" href="/ui-maps.html">
+              <i class="material-icons">location_ons</i>
+              <p>Maps</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-notifications' in segment %} active {% endif %}">
+            <a class="nav-link" href="/ui-notifications.html">
+              <i class="material-icons">notifications</i>
+              <p>Notifications</p>
+            </a>
+          </li>
+          
+          <li class="nav-item ">
+            <a class="nav-link" href="/page-rtl-support.html">
+              <i class="material-icons">language</i>
+              <p>RTL Support</p>
+            </a>
+          </li>
+
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'logout' %}" >
+              <i class="material-icons">directions_run</i>
+              <p>Logout</p>
+            </a>
+          </li>
+
+          <li class="nav-item active-pro ">
+            <a target="_blank" rel="noopener noreferrer"  
+               class="nav-link" 
+               href="https://www.creative-tim.com/product/material-dashboard-django">
+              <i class="material-icons">unarchive</i>
+              <p>See product</p>
+            </a>
+          </li> -->
+
+
+        </ul>
+      </div>
+      {% endif %}
+
+    </div>
