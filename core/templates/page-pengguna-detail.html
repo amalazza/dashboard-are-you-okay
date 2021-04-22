@@ -1,0 +1,143 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Detail Pengguna App {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #00acc1);">
+                  <h4 class="card-title">Detail Pengguna Aplikasi</h4>
+                  <!-- <p class="card-category">Complete your profile</p> -->
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nama</label>
+                          <input type="text" class="form-control" value="Ufairoh Nabihah" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Email</label>
+                          <input type="text" class="form-control" value="ufairoh@gmail.com" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Tanggal Lahir</label>
+                          <input type="text" class="form-control" value="12 November 1999" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Jenis Kelamin</label>
+                          <input type="text" class="form-control" value="Perempuan" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Pekerjaan</label>
+                          <input type="text" class="form-control" value="Mahasiswa" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #00acc1);">
+                  <h4 class="card-title ">Tabel History Deteksi Dini Depresi</h4>
+                  <p class="card-category"> *klik detail untuk melihat lebih jauh</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          No
+                        </th>
+                        <th>
+                          Tanggal
+                        </th>
+                        <th>
+                          Hasil
+                        </th>
+                        <th>
+                          Detail
+                        </th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            1
+                          </td>
+                          <td>
+                            23 Maret 2021
+                          </td>
+                          <td>
+                            Sedang
+                          </td>
+                          <td>
+                            <a class="link" href="page-pengguna-detail-history.html">Detail</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            2
+                          </td>
+                          <td>
+                            18 Maret 2021
+                          </td>
+                          <td>
+                            Ringan
+                          </td>
+                          <td>
+                            <a class="link" href="page-pengguna-detail-history.html">Detail</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            3
+                          </td>
+                          <td>
+                            1 Maret 2021
+                          </td>
+                          <td>
+                            Ringan
+                          </td>
+                          <td>
+                            <a class="link" href="page-pengguna-detail-history.html">Detail</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

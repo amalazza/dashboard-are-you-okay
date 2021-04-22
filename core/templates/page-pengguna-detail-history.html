@@ -1,37 +1,49 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Pertanyaan Kuesioner {% endblock %}
+{% block title %} Detail History Deteksi Dini Depresi {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-profile">
-                    <div class="card-body">
-                        <!-- <h6 class="card-category text-gray">Error 403</h6> -->
-                        <h4 class="card-title">
-                            Tambah Pertanyaan Baru
-                        </h4>
-                        <a href="page-pertanyaan-tambah.html" class="btn btn-primary btn-round">
-                          <span class="material-icons">
-                          add
-                          </span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
+          <div class="row">
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #00acc1);">
-                  <h4 class="card-title ">Daftar Pertanyaan Kuesioner</h4>
-                  <p class="card-category"> *modifikasi pertanyaan terdapat di kolom aksi</p>
+                  <h4 class="card-title">Detail History Deteksi Dini Depresi</h4>
+                  <!-- <p class="card-category">Complete your profile</p> -->
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Tanggal</label>
+                          <input type="text" class="form-control" value="23 Maret 2021" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Hasil</label>
+                          <input type="text" class="form-control" value="Depresi Sedang" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #00acc1);">
+                  <h4 class="card-title ">Daftar Pertanyaan & Jawaban</h4>
+                  <!-- <p class="card-category"> *klik detail untuk melihat lebih jauh</p> -->
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -44,10 +56,7 @@
                           Pertanyaan
                         </th>
                         <th>
-                          Bobot
-                        </th>
-                        <th>
-                          Aksi
+                          Jawaban
                         </th>
                       </thead>
                       <tbody>
@@ -59,10 +68,7 @@
                             Apakah Anda merasa putus asa?
                           </td>
                           <td>
-                            0,5
-                          </td>
-                          <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
+                            Setuju
                           </td>
                         </tr>
                         <tr>
@@ -73,10 +79,7 @@
                             Apakah Anda sempat berfikir untuk bunuh diri?
                           </td>
                           <td>
-                            0,8
-                          </td>
-                          <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
+                            Sangat Setuju
                           </td>
                         </tr>
                         <tr>
@@ -87,10 +90,7 @@
                             Apakah Anda merasa lelah/ kurang bertenaga?
                           </td>
                           <td>
-                            0,3
-                          </td>
-                          <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
+                            Tidak Setuju
                           </td>
                         </tr>
                       </tbody>
