@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
-    'app'  # Enable the inner app 
+    'app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
