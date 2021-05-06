@@ -12,4 +12,4 @@ sqlparse==0.4.1
 toml==0.10.2
 unipath==1.1
 whitenoise==5.2.0
-psycopg2=2.8.6
+psycopg2==2.8.6

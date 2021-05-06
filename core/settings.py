@@ -74,24 +74,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME'  : 'db.sqlite3',
-#     }
-# }
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "areyouokay",
-#         "USER": "postgres",
-#         "PASSWORD": "malacantik",
-#         "HOST": "localhost",
-#         "PORT": "16434",
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -103,12 +85,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = { 'default': dj_database_url.config('postgres://fvxekovyyewzkb:09623c5f8880b21106f1ee19da001af2dda6760a298cf95e23fef9098f345b74@ec2-184-73-198-174.compute-1.amazonaws.com:5432/dcgkhehqdt5kbo') }
-
-# DATABASES = { 'default': dj_database_url.config(conn_max_age=500) }
-
-# db_from_env = dj_database_url.config(conn_max_age=600)
-# DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
