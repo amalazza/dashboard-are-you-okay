@@ -34,6 +34,7 @@ class HasilDeteksi(models.Model):
     pengguna = models.ForeignKey(Pengguna, on_delete=models.CASCADE, blank=False, null=False)
     hasil_hitung = models.FloatField(blank = False, null = False)
     createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    tingkatdepresi = models.ForeignKey(TingkatDepresi, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
         return self.hasil_hitung

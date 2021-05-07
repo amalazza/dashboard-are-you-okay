@@ -21,16 +21,17 @@ class TingkatDepresiSerializer(serializers.ModelSerializer):
         model = TingkatDepresi
         fields = "__all__"
 
+class HasilDeteksiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HasilDeteksi
+        fields = "__all__"
+
 # class HasilDeteksiSerializer(serializers.ModelSerializer):
+#     pengguna = PenggunaSerializer(many=True) # as it is many to many field
+#     # tingkatdepresi = TingkatDepresiSerializer(many=False) # as it is many to many field
 #     class Meta:
 #         model = HasilDeteksi
-#         fields = "__all__"
-
-class HasilDeteksiSerializer(serializers.ModelSerializer):
-    fkpengguna = PenggunaSerializer(many=True) # as it is many to many field
-    class Meta:
-        model = ForeignModel
-        fields = (fkpengguna, 'hasil_hitung', 'createdAt')
+#         fields = ('pengguna', 'hasil_hitung', 'createdAt')
 
 # class HasilDeteksiSerializer(serializers.ModelSerializer):
 #     pengguna = PenggunaSerializer(many=True)
