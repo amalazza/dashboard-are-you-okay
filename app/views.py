@@ -38,6 +38,34 @@ def showAllPengguna(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def viewPengguna(request, pk):
+    pengguna = Pengguna.objects.get(id=pk)
+    serializer = PenggunaSerializer(pengguna, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createPengguna(request):
+    serializer = PenggunaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updatePengguna(request, pk):
+    pengguna = Pengguna.objects.get(id=pk)
+    serializer = PenggunaSerializer(instance=pengguna, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deletePengguna(request, pk):
+    pengguna = Pengguna.objects.get(id=pk)
+    pengguna.delete()  
+    return Response('Items delete successfuly')
+
+
+@api_view(['GET'])
 def apiOverviewPertanyaan(request):
     api_urls={
         'List': 'pertanyaan-list',
@@ -53,6 +81,34 @@ def showAllPertanyaan(request):
     pertanyaan = Pertanyaan.objects.all()
     serializer = PertanyaanSerializer(pertanyaan, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def viewPertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    serializer = PertanyaanSerializer(pertanyaan, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createPertanyaan(request):
+    serializer = PertanyaanSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updatePertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    serializer = PertanyaanSerializer(instance=pertanyaan, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deletePertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    pertanyaan.delete()  
+    return Response('Items delete successfuly')
+
 
 @api_view(['GET'])
 def apiOverviewJawaban(request):
@@ -72,6 +128,34 @@ def showAllJawaban(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def viewJawaban(request, pk):
+    jawaban = Jawaban.objects.get(id=pk)
+    serializer = JawabanSerializer(jawaban, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createJawaban(request):
+    serializer = JawabanSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateJawaban(request, pk):
+    jawaban = Jawaban.objects.get(id=pk)
+    serializer = JawabanSerializer(instance=jawaban, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deleteJawaban(request, pk):
+    jawaban = Jawaban.objects.get(id=pk)
+    jawaban.delete()  
+    return Response('Items delete successfuly')
+
+
+@api_view(['GET'])
 def apiOverviewTingkatDepresi(request):
     api_urls={
         'List': 'tingkatdepresi-list',
@@ -87,6 +171,34 @@ def showAllTingkatDepresi(request):
     tingkatdepresi = TingkatDepresi.objects.all()
     serializer = TingkatDepresiSerializer(tingkatdepresi, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def viewTingkatDepresi(request, pk):
+    tingkatdepresi = TingkatDepresi.objects.get(id=pk)
+    serializer = TingkatDepresiSerializer(tingkatdepresi, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createTingkatDepresi(request):
+    serializer = TingkatDepresiSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateTingkatDepresi(request, pk):
+    tingkatdepresi = TingkatDepresi.objects.get(id=pk)
+    serializer = TingkatDepresiSerializer(instance=tingkatdepresi, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deleteTingkatDepresi(request, pk):
+    tingkatdepresi = TingkatDepresi.objects.get(id=pk)
+    tingkatdepresi.delete()  
+    return Response('Items delete successfuly')
+
 
 @api_view(['GET'])
 def apiOverviewHasilDeteksi(request):
@@ -106,6 +218,34 @@ def showAllHasilDeteksi(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def viewHasilDeteksi(request, pk):
+    hasildeteksi = HasilDeteksi.objects.get(id=pk)
+    serializer = HasilDeteksiSerializer(hasildeteksi, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createHasilDeteksi(request):
+    serializer = HasilDeteksiSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateHasilDeteksi(request, pk):
+    hasildeteksi = HasilDeteksi.objects.get(id=pk)
+    serializer = HasilDeteksiSerializer(instance=hasildeteksi, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deleteHasilDeteksi(request, pk):
+    hasildeteksi = HasilDeteksi.objects.get(id=pk)
+    hasildeteksi.delete()  
+    return Response('Items delete successfuly')
+
+
+@api_view(['GET'])
 def apiOverviewPenanganan(request):
     api_urls={
         'List': 'penanganan-list',
@@ -123,6 +263,33 @@ def showAllPenanganan(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def viewPenanganan(request, pk):
+    penanganan = Penanganan.objects.get(id=pk)
+    serializer = PenangananSerializer(penanganan, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createPenanganan(request):
+    serializer = PenangananSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updatePenanganan(request, pk):
+    penanganan = Penanganan.objects.get(id=pk)
+    serializer = PenangananSerializer(instance=penanganan, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deletePenanganan(request, pk):
+    penanganan = Penanganan.objects.get(id=pk)
+    penanganan.delete()  
+    return Response('Items delete successfuly')
+
+@api_view(['GET'])
 def apiOverviewHistoryPertanyaanJawaban(request):
     api_urls={
         'List': 'historypertanyaanjawaban-list',
@@ -138,6 +305,34 @@ def showAllHistoryPertanyaanJawaban(request):
     historypertanyaanjawaban = HistoryPertanyaanJawaban.objects.all()
     serializer = HistoryPertanyaanJawaban(historypertanyaanjawaban, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def viewHistoryPertanyaanJawaban(request, pk):
+    historypertanyaanjawaban = HistoryPertanyaanJawaban.objects.get(id=pk)
+    serializer = HistoryPertanyaanJawabanSerializer(historypertanyaanjawaban, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createHistoryPertanyaanJawaban(request):
+    serializer = HistoryPertanyaanJawabanSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateHistoryPertanyaanJawaban(request, pk):
+    historypertanyaanjawaban = HistoryPertanyaanJawaban.objects.get(id=pk)
+    serializer = HistoryPertanyaanJawabanSerializer(instance=historypertanyaanjawaban, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deleteHistoryPertanyaanJawaban(request, pk):
+    historypertanyaanjawaban = HistoryPertanyaanJawaban.objects.get(id=pk)
+    historypertanyaanjawaban.delete()  
+    return Response('Items delete successfuly')
+
 
 @api_view(['GET'])
 def apiOverviewPencegahan(request):
