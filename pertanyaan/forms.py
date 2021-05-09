@@ -15,5 +15,5 @@ class PertanyaanModelForm(forms.ModelForm):
     class Meta:
         model = Pertanyaan
         fields = [
-            'pertanyaan'
+            'pertanyaan', 'bobot'
         ]

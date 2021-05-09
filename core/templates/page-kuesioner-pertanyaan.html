@@ -15,7 +15,7 @@
                         <h4 class="card-title">
                             Pertanyaan Kuesioner Baru
                         </h4>
-                        <a href="page-pertanyaan-tambah.html" class="btn btn-primary btn-round">
+                        <a href="/tambah/{{ object.id }}" class="btn btn-primary btn-round">
                           <span class="material-icons">
                           add
                           </span>
@@ -51,48 +51,24 @@
                         </th>
                       </thead>
                       <tbody>
+                        {% block content %}
+                        {% for object in object_list %}
                         <tr>
                           <td>
-                            1
+                            {{ object.id }}
                           </td>
                           <td>
-                            Apakah Anda merasa putus asa?
+                            {{ object.pertanyaan }}
                           </td>
                           <td>
-                            0,5
+                            {{ object.bobot }}
                           </td>
                           <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
+                            <a class="link" href="/edit/{{ object.id }}">Edit</a> | <a class="link" href="/hapus/{{ object.id }}">Hapus</a>
                           </td>
                         </tr>
-                        <tr>
-                          <td>
-                            2
-                          </td>
-                          <td>
-                            Apakah Anda sempat berfikir untuk bunuh diri?
-                          </td>
-                          <td>
-                            0,8
-                          </td>
-                          <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            3
-                          </td>
-                          <td>
-                            Apakah Anda merasa lelah/ kurang bertenaga?
-                          </td>
-                          <td>
-                            0,3
-                          </td>
-                          <td>
-                            <a class="link" href="page-pertanyaan-edit.html">Edit</a> | <a class="link" href="page-pertanyaan-hapus.html">Hapus</a>
-                          </td>
-                        </tr>
+                        {% endfor %}
+                        {% endblock content %}
                       </tbody>
                     </table>
                   </div>

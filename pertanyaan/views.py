@@ -17,11 +17,7 @@ from .serializers import CreateSerializer
 from django.http import *
 from rest_framework.decorators import api_view
 
-# class ApiView(APIView):
-#     def get(self, request):
-#         query = Pertanyaan.objects.all()
-#         serializer = CreateSerializer(query, many=True)
-#         return Response(serializer.data)
+# API
 
 @api_view(['GET'])
 def apiOverviewPertanyaan(request):
@@ -66,3 +62,80 @@ def delete(request, pk):
     pertanyaan = Pertanyaan.objects.get(id=pk)
     pertanyaan.delete()  
     return Response('Items delete successfuly')
+
+
+# UI
+
+# @login_required(login_url="/admin/")
+def delete_view(request , id=None):
+    obj = get_object_or_404(Pertanyaan, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect("/list/")
+
+    context = {
+        "object": obj
+    }
+
+    template = "kuesioner/delete_view.html"
+    return render(request, template, context)
+
+
+
+# @login_required(login_url="/admin/")
+def update_view(request, id=None):
+    obj = get_object_or_404(Pertanyaan, id=id)
+    form = PertanyaanModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect("/detail/{num}".format(num=obj.id))
+    
+    template = "kuesioner/update_view.html"
+    return render(request, template, context)
+
+# @login_required(login_url="/admin/")
+def create_view(request):
+    form = PertanyaanModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect("/list/")
+    context = {
+        "form": form
+    }
+        
+    template = "kuesioner/create_view.html"
+    return render(request, template, context)
+
+# @login_required(login_url="/admin/")    
+def detail_view(request, id=None):
+    print(id)
+    qs = get_object_or_404(Pertanyaan, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "kuesioner\detail_view.html"
+    return render(request, template, context)
+
+# @login_required(login_url="/admin/")
+def list_view(request):
+    query = request.GET.get("qury", None)
+    obj = Pertanyaan.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "kuesioner\list_view.html"    
+    return render(request, template, context)
