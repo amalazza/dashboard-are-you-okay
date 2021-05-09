@@ -9,8 +9,8 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('list/', views.showAll, name='pertanyaan-list'),
-    path('detail/<int:pk>/', views.viewPertanyaan, name='pertanyaan-detail'),
-    path('create/', views.createPertanyaan, name='pertanyaan-create'),
-    path('update/<int:pk>/', views.updatePertanyaan, name='pertanyaan-update '),
-    path('delete/<int:pk>/', views.deletePertanyaan, name='pertanyaan-delete '),
+    path('detail/<int:pk>/', views.view, name='pertanyaan-detail'),
+    path('create/', views.create, name='pertanyaan-create'),
+    path('update/<int:pk>/', views.update, name='pertanyaan-update '),
+    path('delete/<int:pk>/', views.delete, name='pertanyaan-delete '),
 ]
