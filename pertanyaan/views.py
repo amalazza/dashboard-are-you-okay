@@ -17,21 +17,52 @@ from .serializers import CreateSerializer
 from django.http import *
 from rest_framework.decorators import api_view
 
-# @api_view(['GET'])
-# def apiOverview(request):
-#     api_urls={
-#         'List': 'pertanyaan-list',
-#     }
-#     return Response(api_urls)
+# class ApiView(APIView):
+#     def get(self, request):
+#         query = Pertanyaan.objects.all()
+#         serializer = CreateSerializer(query, many=True)
+#         return Response(serializer.data)
 
-# @api_view(['GET'])
-# def showAll(request):
-#     query = Pertanyaan.objects.all()
-#     serializer = CreateSerializer(query, many=True)
-#     return Response(serializer.data)
+@api_view(['GET'])
+def apiOverviewPertanyaan(request):
+    api_urls={
+        'List': 'list',
+        'Detail View': 'detail/<int:id>/',
+        'Create': 'create',
+        'Update View': 'update/<int:id>/',
+        'Delete View': 'delete/<int:id>/',
+    }
+    return Response(api_urls)
 
-class ApiView(APIView):
-    def get(self, request):
-        query = Pertanyaan.objects.all()
-        serializer = CreateSerializer(query, many=True)
-        return Response(serializer.data)
+@api_view(['GET'])
+def showAllPertanyaan(request):
+    pertanyaan = Pertanyaan.objects.all()
+    serializer = PertanyaanSerializer(pertanyaan, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def viewPertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    serializer = PertanyaanSerializer(pertanyaan, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createPertanyaan(request):
+    serializer = PertanyaanSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updatePertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    serializer = PertanyaanSerializer(instance=pertanyaan, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deletePertanyaan(request, pk):
+    pertanyaan = Pertanyaan.objects.get(id=pk)
+    pertanyaan.delete()  
+    return Response('Items delete successfuly')
