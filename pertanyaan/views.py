@@ -37,18 +37,18 @@ def apiOverviewPertanyaan(request):
 @api_view(['GET'])
 def showAll(request):
     pertanyaan = Pertanyaan.objects.all()
-    serializer = PertanyaanSerializer(pertanyaan, many=True)
+    serializer = CreateSerializer(pertanyaan, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def view(request, pk):
     pertanyaan = Pertanyaan.objects.get(id=pk)
-    serializer = PertanyaanSerializer(pertanyaan, many=False)
+    serializer = CreateSerializer(pertanyaan, many=False)
     return Response(serializer.data)
 
 @api_view(['POST'])
 def create(request):
-    serializer = PertanyaanSerializer(data=request.data)
+    serializer = CreateSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -56,7 +56,7 @@ def create(request):
 @api_view(['POST'])
 def update(request, pk):
     pertanyaan = Pertanyaan.objects.get(id=pk)
-    serializer = PertanyaanSerializer(instance=pertanyaan, data=request.data)
+    serializer = CreateSerializer(instance=pertanyaan, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
