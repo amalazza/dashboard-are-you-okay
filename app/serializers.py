@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Pengguna, Pertanyaan, Jawaban, TingkatDepresi, HasilDeteksi, Penanganan, HistoryPertanyaanJawaban, Pencegahan, Artikel
+from .models import Pengguna, Pertanyaan, Jawaban, TingkatDepresi, HasilDeteksi, Penanganan, HistoryPertanyaanJawaban, Artikel
 
 class PenggunaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,10 +64,10 @@ class HistoryPertanyaanJawabanSerializer(serializers.ModelSerializer):
         model = HistoryPertanyaanJawaban
         fields = "__all__"
 
-class PencegahanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pencegahan
-        fields = "__all__"
+# class PencegahanSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Pencegahan
+#         fields = "__all__"
 
 class ArtikelSerializer(serializers.ModelSerializer):
     class Meta:

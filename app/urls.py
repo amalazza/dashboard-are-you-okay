@@ -63,10 +63,11 @@ urlpatterns = [
     path('historypertanyaanjawaban-update/<int:pk>/', views.updateHistoryPertanyaanJawaban, name='historypertanyaanjawaban-update '),
     path('historypertanyaanjawaban-delete/<int:pk>/', views.deleteHistoryPertanyaanJawaban, name='historypertanyaanjawaban-delete '),
 
-    path('', views.apiOverviewPencegahan, name='apiOverviewPencegahan'),
-    path('pencegahan-list/', views.showAllPencegahan, name='pencegahan-list'),
-
     path('', views.apiOverviewArtikel, name='apiOverviewArtikel'),
     path('artikel-list/', views.showAllArtikel, name='artikel-list'),
+    path('artikel-detail/<int:pk>/', views.viewArtikel, name='artikel-detail'),
+    path('artikel-create/', views.createArtikel, name='artikel-create'),
+    path('artikel-update/<int:pk>/', views.updateArtikel, name='artikel-update '),
+    path('artikel-delete/<int:pk>/', views.deleteArtikel, name='artikel-delete '),
 
 ]

@@ -11,8 +11,8 @@ from django import template
 
 from rest_framework.response import Response
 from rest_framework import generics
-from .models import Pengguna, Pertanyaan, Jawaban, TingkatDepresi, HasilDeteksi, Penanganan, HistoryPertanyaanJawaban, Pencegahan, Artikel
-from .serializers import PenggunaSerializer, PertanyaanSerializer, JawabanSerializer, TingkatDepresiSerializer, HasilDeteksiSerializer, PenangananSerializer, HistoryPertanyaanJawabanSerializer, PencegahanSerializer, ArtikelSerializer
+from .models import Pengguna, Pertanyaan, Jawaban, TingkatDepresi, HasilDeteksi, Penanganan, HistoryPertanyaanJawaban, Artikel
+from .serializers import PenggunaSerializer, PertanyaanSerializer, JawabanSerializer, TingkatDepresiSerializer, HasilDeteksiSerializer, PenangananSerializer, HistoryPertanyaanJawabanSerializer, ArtikelSerializer
 
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
@@ -333,24 +333,6 @@ def deleteHistoryPertanyaanJawaban(request, pk):
     historypertanyaanjawaban.delete()  
     return Response('Items delete successfuly')
 
-
-@api_view(['GET'])
-def apiOverviewPencegahan(request):
-    api_urls={
-        'List': 'pencegahan-list',
-        'Detail View': 'pencegahan-detail/<int:id>/',
-        'Create': 'pencegahan-create',
-        'Update View': 'pencegahan-update/<int:id>/',
-        'Delete View': 'pencegahan-delete/<int:id>/',
-    }
-    return Response(api_urls)
-
-@api_view(['GET'])
-def showAllPencegahan(request):
-    pencegahan = Pencegahan.objects.all()
-    serializer = PencegahanSerializer(pencegahan, many=True)
-    return Response(serializer.data)
-
 @api_view(['GET'])
 def apiOverviewArtikel(request):
     api_urls={
@@ -367,6 +349,33 @@ def showAllArtikel(request):
     artikel = Artikel.objects.all()
     serializer = ArtikelSerializer(artikel, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def viewArtikel(request, pk):
+    artikel = Artikel.objects.get(id=pk)
+    serializer = ArtikelSerializer(artikel, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createArtikel(request):
+    serializer = ArtikelSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateArtikel(request, pk):
+    artikel = Artikel.objects.get(id=pk)
+    serializer = ArtikelSerializer(instance=artikel, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def deleteArtikel(request, pk):
+    artikel = Artikel.objects.get(id=pk)
+    artikel.delete()  
+    return Response('Items delete successfuly')
 
 @login_required(login_url="/login/")
 def index(request):
