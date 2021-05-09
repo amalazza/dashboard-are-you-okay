@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'app',
     'rest_framework',
+    'pertanyaan',
 ]
 
 MIDDLEWARE = [
