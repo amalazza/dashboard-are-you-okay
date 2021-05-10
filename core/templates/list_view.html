@@ -63,7 +63,7 @@
                             {{ object.bobot }}
                           </td>
                           <td>
-                            <a class="link" href="{% url 'edit-pertanyaan' %}/{{ object.id }}">Edit</a> | <a class="link" href="{% url 'hapus-pertanyaan' %}/{{ object.id }}">Hapus</a>
+                            <a class="link" href="/pertanyaan{{ object.id }}/edit">Edit</a> | <a class="link" href="/pertanyaan{{ object.id }}/delete">Hapus</a>
                           </td>
                         </tr>
                         {% endfor %}
