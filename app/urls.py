@@ -30,6 +30,7 @@ urlpatterns = [
     path('pertanyaan-update/<int:pk>/', views.updatePertanyaan, name='pertanyaan-update '),
     path('pertanyaan-delete/<int:pk>/', views.deletePertanyaan, name='pertanyaan-delete '),
     # PERTANYAAN CRUD
+    path('', views.overviewPertanyaan, name='overviewPertanyaan'),
     path('layanan/kuesioner/pertanyaan/list/', views.list_view_pertanyaan, name='pertanyaan-list'),
     path('layanan/kuesioner/pertanyaan/detail/<int:id>/', views.detail_view_pertanyaan, name='detail-pertanyaan'),
     path('layanan/kuesioner/pertanyaan/tambah/', views.create_view_pertanyaan, name='tambah-pertanyaan'),

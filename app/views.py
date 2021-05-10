@@ -4,9 +4,10 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django import template
 
 from rest_framework.response import Response
@@ -123,6 +124,17 @@ def deletePertanyaan(request, pk):
     return Response('Items delete successfuly')
 
 # CRUD UI PERTANYAAN
+
+@api_view(['GET'])
+def overviewPertanyaan(request):
+    api_urls={
+        'List': 'layanan/kuesioner/pertanyaan/list/',
+        'Detail View': 'layanan/kuesioner/pertanyaan/detail/<int:id>/',
+        'Create': 'layanan/kuesioner/pertanyaan/tambah/',
+        'Update View': 'layanan/kuesioner/pertanyaan/edit/<int:id>/',
+        'Delete View': 'layanan/kuesioner/pertanyaan/hapus/<int:id>/',
+    }
+    return Response(api_urls)
 
 @login_required(login_url="/login/")
 def delete_view_pertanyaan(request , id=None):
