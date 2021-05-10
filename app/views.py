@@ -143,7 +143,7 @@ def delete_view_pertanyaan(request , id=None):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Items delete successfuly")
-        return HttpResponseRedirect(reverse('layanan/kuesioner/pertanyaan/list/'))
+        return HttpResponseRedirect(reverse("layanan/kuesioner/pertanyaan/list/"))
 
     context = {
         "object": obj
@@ -164,7 +164,7 @@ def update_view_pertanyaan(request, id=None):
         #print(obj.title)
         obj.save()
         messages.success(request, "Items updated successfuly")
-        return HttpResponseRedirect(reverse('layanan/kuesioner/pertanyaan/detail/{num}'.format(num=obj.id))
+        return HttpResponseRedirect(reverse("layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id))
     
     template = "update_view.html"
     return render(request, template, context)
@@ -175,7 +175,7 @@ def create_view_pertanyaan(request):
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
-        return HttpResponseRedirect(reverse('layanan/kuesioner/pertanyaan/list/'))
+        return HttpResponseRedirect(reverse("layanan/kuesioner/pertanyaan/list/"))
     context = {
         "form": form
     }
