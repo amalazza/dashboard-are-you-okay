@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pengguna {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                  <h4 class="card-title ">Daftar Pengguna</h4>
+                  <p class="card-category"> *modifikasi pengguna terdapat di kolom aksi</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          No
+                        </th>
+                        <th>
+                          Nama
+                        </th>
+                        <th>
+                          Email
+                        </th>
+                        <th>
+                          Tanggal Lahir
+                        </th>
+                        <th>
+                          Jenis Kelamin
+                        </th>
+                        <th>
+                          Pekerjaan
+                        </th>
+                        <th>
+                          Aksi
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                          <td>
+                            {{ object.id }}
+                          </td>
+                          <td>
+                            {{ object.nama }}
+                          </td>
+                          <td>
+                            {{ object.email }}
+                          </td>
+                          <td>
+                            {{ object.ttl }}
+                          </td>
+                          <td>
+                            {{ object.jenis_kelamin }}
+                          </td>
+                          <td>
+                            {{ object.pekerjaan }}
+                          </td>
+                          <td>
+                            <a class="link" href="{% url 'app:detail-pengguna' object.id %}">Detail</a>
+                            <!-- <a class="link" href="{% url 'app:edit-penanganan' object.id %}">Edit</a> | 
+                            <a class="link" href="{% url 'app:hapus-penanganan' object.id %}">Hapus</a> -->
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

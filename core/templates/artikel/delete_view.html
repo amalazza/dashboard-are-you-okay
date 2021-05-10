@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Hapus Artikel {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+            <div class="alert alert-warning">
+            <a href="{% url 'app:detail-artikel' object.id %}" class="close" aria-label="Close">
+                <i class="material-icons">close</i>
+            </a>
+            <span>
+                <form method='POST' action="."> {% csrf_token %}
+                <h4 style="font-weight: bold;"> Warning<hr></h4>
+                
+                <span>Apakah anda yakin ingin menghapus data="{{ object.judul }}"?</span>
+                <a href="{% url 'app:detail-artikel' object.id %}" class="btn btn-primary pull-right">Cancel</a>
+                <input type='submit' value='Yes' class="btn btn-primary pull-right">
+                </form>
+            </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script>
+    $(document).ready(function() {
+      //init DateTimePickers
+      md.initFormExtendedDatetimepickers();
+    });
+  </script>
+  
+{% endblock javascripts %}

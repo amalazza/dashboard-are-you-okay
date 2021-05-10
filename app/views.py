@@ -23,6 +23,10 @@ from rest_framework import status
  
 from rest_framework.decorators import api_view
 
+
+
+
+
 @login_required(login_url="/login/")
 def index(request):
     
@@ -31,6 +35,12 @@ def index(request):
 
     html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
+
+
+
+
+
+# CRUD API PENGGUNA
 
 @api_view(['GET'])
 def apiOverviewPengguna(request):
@@ -76,9 +86,97 @@ def deletePengguna(request, pk):
     pengguna.delete()  
     return Response('Items delete successfuly')
 
+# CRUD UI PENGGUNA
+
+@api_view(['GET'])
+def overviewPengguna(request):
+    api_urls={
+        'List': 'app/pengguna',
+        'Detail View': 'app/pengguna/detail/<int:id>/',
+        # 'Create': 'pengguna/tambah/',
+        # 'Update View': 'pengguna/edit/<int:id>/',
+        # 'Delete View': 'pengguna/hapus/<int:id>/',
+    }
+    return Response(api_urls)
+
+@login_required(login_url="/login/")
+def delete_view_pengguna(request , id=None):
+    obj = get_object_or_404(Pengguna, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect(reverse('app:list-pengguna'))
+
+    context = {
+        "object": obj
+    }
+
+    template = "pengguna/delete_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def update_view_pengguna(request, id=None):
+    obj = get_object_or_404(Pengguna, id=id)
+    form = PenggunaModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect(reverse('app:detail-pengguna', kwargs={'id':'{num}'.format(num=obj.id)}))
+        # reverse('app:edit-pengguna', kwargs={'id':'{num}'.format(num=obj.id)})
+    
+    template = "pengguna/update_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def create_view_pengguna(request):
+    form = PenggunaModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect(reverse('app:list-pengguna'))
+    context = {
+        "form": form
+    }
+        
+    template = "pengguna/create_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def detail_view_pengguna(request, id=None):
+    print(id)
+    qs = get_object_or_404(Pengguna, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "pengguna/detail_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def list_view_pengguna(request):
+    query = request.GET.get("query", None)
+    obj = Pengguna.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "pengguna/list_view.html"    
+    return render(request, template, context)
 
 
 
+
+
+# CRUD API PERTANYAAN
 
 @api_view(['GET'])
 def apiOverviewPertanyaan(request):
@@ -149,7 +247,7 @@ def delete_view_pertanyaan(request , id=None):
         "object": obj
     }
 
-    template = "kuesioner/delete_view.html"
+    template = "kuesioner/pertanyaan/delete_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -167,7 +265,7 @@ def update_view_pertanyaan(request, id=None):
         return HttpResponseRedirect(reverse('app:detail-pertanyaan', kwargs={'id':'{num}'.format(num=obj.id)}))
         # reverse('app:edit-pertanyaan', kwargs={'id':'{num}'.format(num=obj.id)})
     
-    template = "kuesioner/update_view.html"
+    template = "kuesioner/pertanyaan/update_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -181,7 +279,7 @@ def create_view_pertanyaan(request):
         "form": form
     }
         
-    template = "kuesioner/create_view.html"
+    template = "kuesioner/pertanyaan/create_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -193,7 +291,7 @@ def detail_view_pertanyaan(request, id=None):
         "object" : qs
     }
 
-    template = "kuesioner/detail_view.html"
+    template = "kuesioner/pertanyaan/detail_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -207,12 +305,14 @@ def list_view_pertanyaan(request):
         "object_list" : obj
     }
 
-    template = "kuesioner/list_view.html"    
+    template = "kuesioner/pertanyaan/list_view.html"    
     return render(request, template, context)
 
 
 
 
+
+# CRUD API JAWABAN
 
 @api_view(['GET'])
 def apiOverviewJawaban(request):
@@ -258,6 +358,97 @@ def deleteJawaban(request, pk):
     jawaban.delete()  
     return Response('Items delete successfuly')
 
+# CRUD UI JAWABAN
+
+@api_view(['GET'])
+def overviewJawaban(request):
+    api_urls={
+        'List': 'layanan/kuesioner/jawaban/',
+        'Detail View': 'layanan/kuesioner/jawaban/detail/<int:id>/',
+        'Create': 'layanan/kuesioner/jawaban/tambah/',
+        'Update View': 'layanan/kuesioner/jawaban/edit/<int:id>/',
+        'Delete View': 'layanan/kuesioner/jawaban/hapus/<int:id>/',
+    }
+    return Response(api_urls)
+
+@login_required(login_url="/login/")
+def delete_view_jawaban(request , id=None):
+    obj = get_object_or_404(Jawaban, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect(reverse('app:list-jawaban'))
+
+    context = {
+        "object": obj
+    }
+
+    template = "kuesioner/jawaban/delete_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def update_view_jawaban(request, id=None):
+    obj = get_object_or_404(Jawaban, id=id)
+    form = JawabanModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect(reverse('app:detail-jawaban', kwargs={'id':'{num}'.format(num=obj.id)}))
+        # reverse('app:edit-jawaban', kwargs={'id':'{num}'.format(num=obj.id)})
+    
+    template = "kuesioner/jawaban/update_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def create_view_jawaban(request):
+    form = JawabanModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect(reverse('app:list-jawaban'))
+    context = {
+        "form": form
+    }
+        
+    template = "kuesioner/jawaban/create_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def detail_view_jawaban(request, id=None):
+    print(id)
+    qs = get_object_or_404(Jawaban, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "kuesioner/jawaban/detail_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def list_view_jawaban(request):
+    query = request.GET.get("query", None)
+    obj = Jawaban.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "kuesioner/jawaban/list_view.html"    
+    return render(request, template, context)
+
+
+
+
+
+# CRUD API TINGKAT DEPRESI
 
 @api_view(['GET'])
 def apiOverviewTingkatDepresi(request):
@@ -304,6 +495,11 @@ def deleteTingkatDepresi(request, pk):
     return Response('Items delete successfuly')
 
 
+
+
+
+# CRUD API HASIL DETEKSI
+
 @api_view(['GET'])
 def apiOverviewHasilDeteksi(request):
     api_urls={
@@ -349,6 +545,11 @@ def deleteHasilDeteksi(request, pk):
     return Response('Items delete successfuly')
 
 
+
+
+
+# CRUD API PENANGANAN
+
 @api_view(['GET'])
 def apiOverviewPenanganan(request):
     api_urls={
@@ -392,6 +593,97 @@ def deletePenanganan(request, pk):
     penanganan = Penanganan.objects.get(id=pk)
     penanganan.delete()  
     return Response('Items delete successfuly')
+
+# CRUD UI PENANGANAN
+
+@api_view(['GET'])
+def overviewPenanganan(request):
+    api_urls={
+        'List': 'layanan/penanganan/',
+        'Detail View': 'layanan/penanganan/detail/<int:id>/',
+        'Create': 'layanan/penanganan/tambah/',
+        'Update View': 'layanan/penanganan/edit/<int:id>/',
+        'Delete View': 'layanan/penanganan/hapus/<int:id>/',
+    }
+    return Response(api_urls)
+
+@login_required(login_url="/login/")
+def delete_view_penanganan(request , id=None):
+    obj = get_object_or_404(Penanganan, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect(reverse('app:list-penanganan'))
+
+    context = {
+        "object": obj
+    }
+
+    template = "penanganan/delete_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def update_view_penanganan(request, id=None):
+    obj = get_object_or_404(Penanganan, id=id)
+    form = PenangananModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect(reverse('app:detail-penanganan', kwargs={'id':'{num}'.format(num=obj.id)}))
+        # reverse('app:edit-penanganan', kwargs={'id':'{num}'.format(num=obj.id)})
+    
+    template = "penanganan/update_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def create_view_penanganan(request):
+    form = PenangananModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect(reverse('app:list-penanganan'))
+    context = {
+        "form": form
+    }
+        
+    template = "penanganan/create_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def detail_view_penanganan(request, id=None):
+    print(id)
+    qs = get_object_or_404(Penanganan, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "penanganan/detail_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def list_view_penanganan(request):
+    query = request.GET.get("query", None)
+    obj = Penanganan.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "penanganan/list_view.html"    
+    return render(request, template, context)
+
+
+
+
+# CRUD API HISTORY PERTANYAAN JAWABAN
 
 @api_view(['GET'])
 def apiOverviewHistoryPertanyaanJawaban(request):
@@ -437,6 +729,12 @@ def deleteHistoryPertanyaanJawaban(request, pk):
     historypertanyaanjawaban.delete()  
     return Response('Items delete successfuly')
 
+
+
+
+
+# CRUD API ARTIKEL
+
 @api_view(['GET'])
 def apiOverviewArtikel(request):
     api_urls={
@@ -480,6 +778,92 @@ def deleteArtikel(request, pk):
     artikel = Artikel.objects.get(id=pk)
     artikel.delete()  
     return Response('Items delete successfuly')
+
+# CRUD UI ARTIKEL
+
+@api_view(['GET'])
+def overviewArtikel(request):
+    api_urls={
+        'List': 'layanan/artikel/',
+        'Detail View': 'layanan/artikel/detail/<int:id>/',
+        'Create': 'layanan/artikel/tambah/',
+        'Update View': 'layanan/artikel/edit/<int:id>/',
+        'Delete View': 'layanan/artikel/hapus/<int:id>/',
+    }
+    return Response(api_urls)
+
+@login_required(login_url="/login/")
+def delete_view_artikel(request , id=None):
+    obj = get_object_or_404(Artikel, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect(reverse('app:list-artikel'))
+
+    context = {
+        "object": obj
+    }
+
+    template = "artikel/delete_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def update_view_artikel(request, id=None):
+    obj = get_object_or_404(Artikel, id=id)
+    form = ArtikelModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect(reverse('app:detail-artikel', kwargs={'id':'{num}'.format(num=obj.id)}))
+        # reverse('app:edit-artikel', kwargs={'id':'{num}'.format(num=obj.id)})
+    
+    template = "artikel/update_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def create_view_artikel(request):
+    form = ArtikelModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect(reverse('app:list-artikel'))
+    context = {
+        "form": form
+    }
+        
+    template = "artikel/create_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def detail_view_artikel(request, id=None):
+    print(id)
+    qs = get_object_or_404(Artikel, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "artikel/detail_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def list_view_artikel(request):
+    query = request.GET.get("query", None)
+    obj = Artikel.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "artikel/list_view.html"    
+    return render(request, template, context)
 
 
 

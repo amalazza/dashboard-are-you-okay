@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Edit Jawaban Kuesioner {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                  <h4 class="card-title">Edit Jawaban</h4>
+                  <!-- <p class="card-category">Complete your profile</p> -->
+                </div>
+                <div class="card-body">
+                    <form method='POST' action='.'>{% csrf_token %}
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <!-- <label class="bmd-label-floating">Jawaban</label> -->
+                              {% csrf_token %}
+                              {{ form.as_p }}
+                              <!-- <input type="text" class="form-control"> -->
+                            </div>
+                          </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                        <div class="clearfix"></div>
+                      </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

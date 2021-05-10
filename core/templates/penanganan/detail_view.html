@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Detail Penanganan {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                  <h4 class="card-title">Detail Penanganan</h4>
+                  <!-- <p class="card-category">Complete your profile</p> -->
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Tingkat Depresi</label>
+                          {% if object.tingkatdepresi_id == 1 %}
+                          <input type="text" class="form-control" value="Tidak Depresi" disabled="true">
+                          {% elif object.tingkatdepresi_id == 2 %}
+                          <input type="text" class="form-control" value="Depresi Ringan" disabled="true">
+                          {% elif object.tingkatdepresi_id == 3 %}
+                          <input type="text" class="form-control" value="Depresi Sedang" disabled="true">
+                          {% else %}
+                          <input type="text" class="form-control" value="Depresi Berat" disabled="true">
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Judul</label>
+                          <input type="text" class="form-control" value="{{object.judul}}" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Cover</label>
+                          <input type="text" class="form-control" value="{{object.cover}}" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Isi</label>
+                          <input type="text" class="form-control" value="{{object.isi}}" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Tanggal</label>
+                          <input type="text" class="form-control" value="{{object.createdAt}}" disabled="true">
+                        </div>
+                      </div>
+                    </div>
+                    <a href="{% url 'app:hapus-penanganan' object.id %}" class="btn btn-primary pull-right">Hapus</a>
+
+                    <a href="{% url 'app:edit-penanganan' object.id %}" class="btn btn-primary pull-right">Edit</a>
+
+
+                    <!-- <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Cover</label>
+                          <img src="/static/assets/img/6.png" style="height: 100px; width: 100px" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Isi</label>
+                          <textarea class="form-control" rows="45" disabled="true">
+                            {{object.isi}}
+                          </textarea>
+                        </div>
+                      </div> -->
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

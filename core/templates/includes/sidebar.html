@@ -17,7 +17,7 @@
             </a>
           </li>
           <li class="nav-item {% if 'page-pengguna' in segment %} active {% endif %}">
-            <a class="nav-link" href="/page-pengguna.html">
+            <a class="nav-link" href="{% url 'app:list-pengguna' %}">
               <i class="material-icons">person</i>
               <p>Pengguna</p>
             </a>
@@ -36,10 +36,10 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownKuesioner">
                   <a class="dropdown-item" href="{% url 'app:list-pertanyaan' %}">Pertanyaan</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="/page-kuesioner-jawaban.html">Jawaban</a>
+                  <a class="dropdown-item" href="{% url 'app:list-jawaban' %}">Jawaban</a>
                 </div>
               </li>
-              <li class="nav-item {% if 'page-aktivitas' in segment %} active {% endif %}">
+              <!-- <li class="nav-item {% if 'page-aktivitas' in segment %} active {% endif %}">
                 <a href="" class="nav-link" id="navbarDropdownAktivitas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">accessibility</i>
                   <p>Aktivitas</p>
@@ -49,9 +49,15 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="/page-aktivitas-penanganan.html">Penanganan</a>
                 </div>
+              </li> -->
+              <li class="nav-item {% if 'page-aktivitas-penanganan' in segment %} active {% endif %}">
+                <a class="nav-link" href="{% url 'app:list-penanganan' %}">
+                  <i class="material-icons">accessibility</i>
+                  <p>Penanganan</p>
+                </a>
               </li>
               <li class="nav-item {% if 'page-artikel' in segment %} active {% endif %}">
-                <a class="nav-link" href="/page-artikel.html">
+                <a class="nav-link" href="{% url 'app:list-artikel' %}">
                   <i class="material-icons">article</i>
                   <p>Artikel</p>
                 </a>
