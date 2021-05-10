@@ -164,7 +164,7 @@ def update_view_pertanyaan(request, id=None):
         #print(obj.title)
         obj.save()
         messages.success(request, "Items updated successfuly")
-        return HttpResponseRedirect(reverse("layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id))
+        return HttpResponseRedirect(reverse("layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id)))
     
     template = "update_view.html"
     return render(request, template, context)
