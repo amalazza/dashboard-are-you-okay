@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .models import Pengguna, Pertanyaan, Jawaban, TingkatDepresi, HasilDeteksi, Penanganan, HistoryPertanyaanJawaban, Artikel
 from .serializers import PenggunaSerializer, PertanyaanSerializer, JawabanSerializer, TingkatDepresiSerializer, HasilDeteksiSerializer, PenangananSerializer, HistoryPertanyaanJawabanSerializer, ArtikelSerializer
+from .forms import *
 
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
@@ -135,7 +136,7 @@ def delete_view_pertanyaan(request , id=None):
         "object": obj
     }
 
-    template = "kuesioner/delete_view.html"
+    template = "delete_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -152,7 +153,7 @@ def update_view_pertanyaan(request, id=None):
         messages.success(request, "Items updated successfuly")
         return HttpResponseRedirect("layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id))
     
-    template = "kuesioner/update_view.html"
+    template = "update_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -166,7 +167,7 @@ def create_view_pertanyaan(request):
         "form": form
     }
         
-    template = "kuesioner/create_view.html"
+    template = "create_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -178,7 +179,7 @@ def detail_view_pertanyaan(request, id=None):
         "object" : qs
     }
 
-    template = "kuesioner\detail_view.html"
+    template = "detail_view.html"
     return render(request, template, context)
 
 @login_required(login_url="/login/")
@@ -192,7 +193,7 @@ def list_view_pertanyaan(request):
         "object_list" : obj
     }
 
-    template = "kuesioner\list_view.html"    
+    template = "list_view.html"    
     return render(request, template, context)
 
 
