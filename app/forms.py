@@ -7,7 +7,7 @@ class PertanyaanModelForm(forms.ModelForm):
     pertanyaan = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder" : "Pertanyaan",                
+                # "placeholder" : "Pertanyaan",                
                 "class": "form-control"
             }
         ))

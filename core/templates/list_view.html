@@ -63,6 +63,7 @@
                             {{ object.bobot }}
                           </td>
                           <td>
+                            <a class="link" href="{% url 'app:detail-pertanyaan' object.id %}">Detail</a> |
                             <a class="link" href="{% url 'app:edit-pertanyaan' object.id %}">Edit</a> | 
                             <a class="link" href="{% url 'app:hapus-pertanyaan' object.id %}">Hapus</a>
                           </td>
