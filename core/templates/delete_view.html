@@ -18,7 +18,7 @@
                 </form>
                 <form method='POST' action="."> {% csrf_token %}
                 <input type='submit' value='Yes'>
-                <a href="/pertanyaan{{ object.id }}/detail/">Cancel</a>
+                <a href="{% url 'detail-pertanyaan' %}/{{ object.id }}">Cancel</a>
                 </form>
             </div>
         </div>
