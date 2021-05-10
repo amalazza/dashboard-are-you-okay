@@ -36,11 +36,11 @@ urlpatterns = [
     # path('layanan/kuesioner/pertanyaan/tambah/', views.create_view_pertanyaan, name='tambah-pertanyaan'),
     # path('layanan/kuesioner/pertanyaan/edit/<int:id>/', views.update_view_pertanyaan, name='edit-pertanyaan'),
     # path('layanan/kuesioner/pertanyaan/hapus/<int:id>/', views.delete_view_pertanyaan, name='hapus-pertanyaan'),
-    path(r'^list/$', list_view_pertanyaan, name='list'),
-    path(r'^pertanyaan(?P<id>\d+)/$', detail_view_pertanyaan, name='detail'),
-    path(r'^create/$', create_view_pertanyaan, name='create'),
-    path(r'^pertanyaan(?P<id>\d+)/edit/$', update_view_pertanyaan, name='update'),
-    path(r'^pertanyaan(?P<id>\d+)/delete/$', delete_view_pertanyaan, name='delete'),
+    path(r'^list/$', views.list_view_pertanyaan, name='list'),
+    path(r'^pertanyaan(?P<id>\d+)/$', views.detail_view_pertanyaan, name='detail'),
+    path(r'^create/$', views.create_view_pertanyaan, name='create'),
+    path(r'^pertanyaan(?P<id>\d+)/edit/$', views.update_view_pertanyaan, name='update'),
+    path(r'^pertanyaan(?P<id>\d+)/delete/$', views.delete_view_pertanyaan, name='delete'),
 
 
     path('', views.apiOverviewJawaban, name='apiOverviewJawaban'),
