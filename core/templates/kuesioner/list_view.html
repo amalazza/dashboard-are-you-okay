@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pertanyaan Kuesioner {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-profile">
+                    <div class="card-body">
+                        <!-- <h6 class="card-category text-gray">Error 403</h6> -->
+                        <h4 class="card-title">
+                            Pertanyaan Kuesioner Baru
+                        </h4>
+                        <a href="tambah/{{ object.id }}" class="btn btn-primary btn-round">
+                          <span class="material-icons">
+                          add
+                          </span>
+                          Tambah
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                  <h4 class="card-title ">Daftar Pertanyaan Kuesioner</h4>
+                  <p class="card-category"> *modifikasi pertanyaan terdapat di kolom aksi</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          No
+                        </th>
+                        <th>
+                          Pertanyaan
+                        </th>
+                        <th>
+                          Bobot
+                        </th>
+                        <th>
+                          Aksi
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                          <td>
+                            {{ object.id }}
+                          </td>
+                          <td>
+                            {{ object.pertanyaan }}
+                          </td>
+                          <td>
+                            {{ object.bobot }}
+                          </td>
+                          <td>
+                            <a class="link" href="layanan/kuesioner/pertanyaan/edit/{{ object.id }}">Edit</a> | <a class="link" href="layanan/kuesioner/pertanyaan/hapus/{{ object.id }}">Hapus</a>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

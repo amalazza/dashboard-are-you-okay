@@ -74,6 +74,9 @@ def deletePengguna(request, pk):
     return Response('Items delete successfuly')
 
 
+
+
+
 @api_view(['GET'])
 def apiOverviewPertanyaan(request):
     api_urls={
@@ -117,6 +120,83 @@ def deletePertanyaan(request, pk):
     pertanyaan = Pertanyaan.objects.get(id=pk)
     pertanyaan.delete()  
     return Response('Items delete successfuly')
+
+# CRUD UI PERTANYAAN
+
+@login_required(login_url="/login/")
+def delete_view_pertanyaan(request , id=None):
+    obj = get_object_or_404(Pertanyaan, id=id)
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, "Items delete successfuly")
+        return HttpResponseRedirect("layanan/kuesioner/pertanyaan/list/")
+
+    context = {
+        "object": obj
+    }
+
+    template = "kuesioner/delete_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def update_view_pertanyaan(request, id=None):
+    obj = get_object_or_404(Pertanyaan, id=id)
+    form = PertanyaanModelForm(request.POST or None, instance=obj)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        #print(obj.title)
+        obj.save()
+        messages.success(request, "Items updated successfuly")
+        return HttpResponseRedirect("layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id))
+    
+    template = "kuesioner/update_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def create_view_pertanyaan(request):
+    form = PertanyaanModelForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return HttpResponseRedirect("layanan/kuesioner/pertanyaan/list/")
+    context = {
+        "form": form
+    }
+        
+    template = "kuesioner/create_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def detail_view_pertanyaan(request, id=None):
+    print(id)
+    qs = get_object_or_404(Pertanyaan, id=id)
+    print(qs)
+    context = {
+        "object" : qs
+    }
+
+    template = "kuesioner\detail_view.html"
+    return render(request, template, context)
+
+@login_required(login_url="/login/")
+def list_view_pertanyaan(request):
+    query = request.GET.get("query", None)
+    obj = Pertanyaan.objects.all()
+    if query is not None:
+        obj = obj.filter(title__icontains=query)
+    
+    context = {
+        "object_list" : obj
+    }
+
+    template = "kuesioner\list_view.html"    
+    return render(request, template, context)
+
+
+
 
 
 @api_view(['GET'])

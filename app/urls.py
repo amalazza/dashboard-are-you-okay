@@ -21,12 +21,21 @@ urlpatterns = [
     path('pengguna-update/<int:pk>/', views.updatePengguna, name='pengguna-update '),
     path('pengguna-delete/<int:pk>/', views.deletePengguna, name='pengguna-delete '),
 
+
+    # PERTANYAAN API
     path('', views.apiOverviewPertanyaan, name='apiOverviewPertanyaan'),
     path('pertanyaan-list/', views.showAllPertanyaan, name='pertanyaan-list'),
     path('pertanyaan-detail/<int:pk>/', views.viewPertanyaan, name='pertanyaan-detail'),
     path('pertanyaan-create/', views.createPertanyaan, name='pertanyaan-create'),
     path('pertanyaan-update/<int:pk>/', views.updatePertanyaan, name='pertanyaan-update '),
     path('pertanyaan-delete/<int:pk>/', views.deletePertanyaan, name='pertanyaan-delete '),
+    # PERTANYAAN CRUD
+    path('layanan/kuesioner/pertanyaan/list/', views.list_view_pertanyaan, name='pertanyaan-list'),
+    path('layanan/kuesioner/pertanyaan/detail/<int:id>/', views.detail_view_pertanyaan, name='detail-pertanyaan'),
+    path('layanan/kuesioner/pertanyaan/tambah/', views.create_view_pertanyaan, name='tambah-pertanyaan'),
+    path('layanan/kuesioner/pertanyaan/edit/<int:id>/', views.update_view_pertanyaan, name='edit-pertanyaan'),
+    path('layanan/kuesioner/pertanyaan/hapus/<int:id>/', views.delete_view_pertanyaan, name='hapus-pertanyaan'),
+
 
     path('', views.apiOverviewJawaban, name='apiOverviewJawaban'),
     path('jawaban-list/', views.showAllJawaban, name='jawaban-list'),
