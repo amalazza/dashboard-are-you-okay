@@ -128,7 +128,7 @@ def deletePertanyaan(request, pk):
 @api_view(['GET'])
 def overviewPertanyaan(request):
     api_urls={
-        'List': 'layanan/kuesioner/pertanyaan/list/',
+        'List': 'layanan/kuesioner/pertanyaan/',
         'Detail View': 'layanan/kuesioner/pertanyaan/detail/<int:id>/',
         'Create': 'layanan/kuesioner/pertanyaan/tambah/',
         'Update View': 'layanan/kuesioner/pertanyaan/edit/<int:id>/',
@@ -142,7 +142,7 @@ def delete_view_pertanyaan(request , id=None):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Items delete successfuly")
-        return HttpResponseRedirect("layanan/kuesioner/pertanyaan/list/")
+        return HttpResponseRedirect("layanan/kuesioner/pertanyaan/list")
 
     context = {
         "object": obj

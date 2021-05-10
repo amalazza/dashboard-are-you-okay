@@ -15,7 +15,7 @@
                         <h4 class="card-title">
                             Pertanyaan Kuesioner Baru
                         </h4>
-                        <a href="tambah/{{ object.id }}" class="btn btn-primary btn-round">
+                        <a href="{% url 'tambah-pertanyaan' %}/{{ object.id }}" class="btn btn-primary btn-round">
                           <span class="material-icons">
                           add
                           </span>
@@ -63,7 +63,7 @@
                             {{ object.bobot }}
                           </td>
                           <td>
-                            <a class="link" href="layanan/kuesioner/pertanyaan/edit/{{ object.id }}">Edit</a> | <a class="link" href="layanan/kuesioner/pertanyaan/hapus/{{ object.id }}">Hapus</a>
+                            <a class="link" href="{% url 'edit-pertanyaan' %}/{{ object.id }}">Edit</a> | <a class="link" href="{% url 'hapus-pertanyaan' %}/{{ object.id }}">Hapus</a>
                           </td>
                         </tr>
                         {% endfor %}
