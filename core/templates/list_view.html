@@ -63,7 +63,8 @@
                             {{ object.bobot }}
                           </td>
                           <td>
-                            <a class="link" href="{% url 'edit-pertanyaan' %}/{{ object.id }}">Edit</a> | <a class="link" href="{% url 'hapus-pertanyaan' %}/{{ object.id }}">Hapus</a>
+                            <a class="link" href="{% url 'pertanyaan:edit-pertanyaan' id=form.instance.id %}">Edit</a> | 
+                            <a class="link" href="{% url 'pertanyaan:hapus-pertanyaan' id=form.instance.id %}">Hapus</a>
                           </td>
                         </tr>
                         {% endfor %}
