@@ -66,13 +66,13 @@ def delete(request, pk):
 
 # UI
 
-# @login_required(login_url="/admin/")
+@login_required(login_url="/login/")
 def delete_view(request , id=None):
     obj = get_object_or_404(Pertanyaan, id=id)
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Items delete successfuly")
-        return HttpResponseRedirect("/list/")
+        return HttpResponseRedirect("/layanan/kuesioner/pertanyaan/list/")
 
     context = {
         "object": obj
@@ -83,7 +83,7 @@ def delete_view(request , id=None):
 
 
 
-# @login_required(login_url="/admin/")
+@login_required(login_url="/login/")
 def update_view(request, id=None):
     obj = get_object_or_404(Pertanyaan, id=id)
     form = PertanyaanModelForm(request.POST or None, instance=obj)
@@ -95,18 +95,18 @@ def update_view(request, id=None):
         #print(obj.title)
         obj.save()
         messages.success(request, "Items updated successfuly")
-        return HttpResponseRedirect("/detail/{num}".format(num=obj.id))
+        return HttpResponseRedirect("/layanan/kuesioner/pertanyaan/detail/{num}".format(num=obj.id))
     
     template = "kuesioner/update_view.html"
     return render(request, template, context)
 
-# @login_required(login_url="/admin/")
+@login_required(login_url="/login/")
 def create_view(request):
     form = PertanyaanModelForm(request.POST or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
-        return HttpResponseRedirect("/list/")
+        return HttpResponseRedirect("/layanan/kuesioner/pertanyaan/list/")
     context = {
         "form": form
     }
@@ -114,7 +114,7 @@ def create_view(request):
     template = "kuesioner/create_view.html"
     return render(request, template, context)
 
-# @login_required(login_url="/admin/")    
+@login_required(login_url="/login/")
 def detail_view(request, id=None):
     print(id)
     qs = get_object_or_404(Pertanyaan, id=id)
@@ -126,7 +126,7 @@ def detail_view(request, id=None):
     template = "kuesioner\detail_view.html"
     return render(request, template, context)
 
-# @login_required(login_url="/admin/")
+@login_required(login_url="/login/")
 def list_view(request):
     query = request.GET.get("qury", None)
     obj = Pertanyaan.objects.all()
