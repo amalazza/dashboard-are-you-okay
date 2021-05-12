@@ -25,6 +25,27 @@ from rest_framework.decorators import api_view
 
 
 
+# from django.shortcuts import render, redirect
+# from django.core.files.storage import FileSystemStorage
+# from django.conf import settings
+# from django.conf.urls.static import static
+# import os
+# # import tensorflow as tf
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# import numpy as np
+# import json
+# from sklearn.cluster import KMeans
+# from sklearn.preprocessing import MinMaxScaler
+# import base64
+# from io import BytesIO
+# from sklearn import metrics
+# from sklearn.metrics import confusion_matrix
+# from sklearn.metrics import classification_report
+
+
+
 
 
 @login_required(login_url="/login/")
@@ -62,6 +83,12 @@ def showAllPengguna(request):
 @api_view(['GET'])
 def viewPengguna(request, pk):
     pengguna = Pengguna.objects.get(id=pk)
+    serializer = PenggunaSerializer(pengguna, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def viewEmailPengguna(request, email):
+    pengguna = Pengguna.objects.get(email=email)
     serializer = PenggunaSerializer(pengguna, many=False)
     return Response(serializer.data)
 
@@ -869,27 +896,3 @@ def list_view_artikel(request):
 
 
 
-# @login_required(login_url="/login/")
-# def pages(request):
-#     context = {}
-#     # All resource paths end in .html.
-#     # Pick out the html file name from the url. And load that template.
-#     try:
-        
-#         load_template      = request.path.split('/')[-1]
-#         context['segment'] = load_template
-        
-#         html_template = loader.get_template( load_template )
-#         return HttpResponse(html_template.render(context, request))
-        
-#     except template.TemplateDoesNotExist:
-
-#         html_template = loader.get_template( 'page-404.html' )
-#         return HttpResponse(html_template.render(context, request))
-
-#     except:
-    
-#         html_template = loader.get_template( 'page-500.html' )
-#         return HttpResponse(html_template.render(context, request))
-
-        

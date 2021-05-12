@@ -1,0 +1,122 @@
+[
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 22,
+    "tingkatdepresi_id": 3
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 22,
+    "tingkatdepresi_id": 2
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 22,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 22,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 22,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 22,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 22,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa",
+    "usia": 23,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 23,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa",
+    "usia": 24,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 25,
+    "tingkatdepresi_id": 2
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa",
+    "usia": 23,
+    "tingkatdepresi_id": 3
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa",
+    "usia": 25,
+    "tingkatdepresi_id": 1
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 21,
+    "tingkatdepresi_id": 4
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 21,
+    "tingkatdepresi_id": 1
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Mahasiswa dan Kerja",
+    "usia": 25,
+    "tingkatdepresi_id": 2
+  },
+  {
+    "jenis_kelamin": "Male",
+    "pekerjaan": "Kerja",
+    "usia": 26,
+    "tingkatdepresi_id": 3
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Kerja",
+    "usia": 26,
+    "tingkatdepresi_id": 1
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Kerja",
+    "usia": 24,
+    "tingkatdepresi_id": 1
+  },
+  {
+    "jenis_kelamin": "Female",
+    "pekerjaan": "Mahasiswa",
+    "usia": 23,
+    "tingkatdepresi_id": 4
+  }
+]
