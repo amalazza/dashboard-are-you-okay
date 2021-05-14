@@ -550,6 +550,12 @@ def viewHasilDeteksi(request, pk):
     serializer = HasilDeteksiSerializer(hasildeteksi, many=False)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def viewIdPenggunaHasilDeteksi(request, pengguna_id):
+    hasildeteksi = HasilDeteksi.objects.get(pengguna_id=pengguna_id)
+    serializer = HasilDeteksiSerializer(hasildeteksi, many=False)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def createHasilDeteksi(request):
     serializer = HasilDeteksiSerializer(data=request.data)
@@ -597,6 +603,12 @@ def showAllPenanganan(request):
 @api_view(['GET'])
 def viewPenanganan(request, pk):
     penanganan = Penanganan.objects.get(id=pk)
+    serializer = PenangananSerializer(penanganan, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def viewIdTingkatDepresiPenanganan(request, tingkatdepresi_id):
+    penanganan = Penanganan.objects.get(tingkatdepresi_id=tingkatdepresi_id)
     serializer = PenangananSerializer(penanganan, many=False)
     return Response(serializer.data)
 
