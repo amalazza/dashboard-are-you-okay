@@ -552,8 +552,8 @@ def viewHasilDeteksi(request, pk):
 
 @api_view(['GET'])
 def viewIdPenggunaHasilDeteksi(request, pengguna_id):
-    hasildeteksi = HasilDeteksi.objects.get(pengguna_id=pengguna_id)
-    serializer = HasilDeteksiSerializer(hasildeteksi, many=False)
+    hasildeteksi = HasilDeteksi.objects.all().filter(pengguna_id=pengguna_id)
+    serializer = HasilDeteksiSerializer(hasildeteksi, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
