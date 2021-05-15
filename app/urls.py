@@ -88,6 +88,7 @@ urlpatterns = [
     path('hasildeteksi-list/', views.showAllHasilDeteksi, name='hasildeteksi-list'),
     path('hasildeteksi-detail/<int:pk>/', views.viewHasilDeteksi, name='hasildeteksi-detail'),
     path('hasildeteksi-detail-by-idpengguna/<int:pengguna_id>/', views.viewIdPenggunaHasilDeteksi, name='hasildeteksi-detail-by-idpengguna'),
+    path('hasildeteksi-detail-by-recentidpengguna/<int:pengguna_id>/', views.viewRecentIdPenggunaHasilDeteksi, name='hasildeteksi-detail-by-recentidpengguna'),
     path('hasildeteksi-create/', views.createHasilDeteksi, name='hasildeteksi-create'),
     path('hasildeteksi-update/<int:pk>/', views.updateHasilDeteksi, name='hasildeteksi-update '),
     path('hasildeteksi-delete/<int:pk>/', views.deleteHasilDeteksi, name='hasildeteksi-delete '),

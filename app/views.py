@@ -556,6 +556,12 @@ def viewIdPenggunaHasilDeteksi(request, pengguna_id):
     serializer = HasilDeteksiSerializer(hasildeteksi, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def viewRecentIdPenggunaHasilDeteksi(request, pengguna_id):
+    hasildeteksi = HasilDeteksi.objects.filter(pengguna_id=pengguna_id).order_by('-createdAt').first()
+    serializer = HasilDeteksiSerializer(hasildeteksi, many=False)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def createHasilDeteksi(request):
     serializer = HasilDeteksiSerializer(data=request.data)
