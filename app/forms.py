@@ -60,7 +60,7 @@ class PenangananModelForm(forms.ModelForm):
     class Meta:
         model = Penanganan
         fields = [
-            'tingkatdepresi_id', 'judul', 'cover', 'isi'
+            'tingkatdepresi_id', 'judul', 'image', 'isi'
         ]
 
 class ArtikelModelForm(forms.ModelForm):
@@ -75,5 +75,5 @@ class ArtikelModelForm(forms.ModelForm):
     class Meta:
         model = Artikel
         fields = [
-            'judul', 'cover', 'isi'
+            'judul', 'image', 'isi'
         ]

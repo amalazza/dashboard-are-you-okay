@@ -23,6 +23,8 @@ from rest_framework import status
  
 from rest_framework.decorators import api_view
 
+from cloudinary.forms import cl_init_js_callbacks
+
 
 
 # from django.shortcuts import render, redirect

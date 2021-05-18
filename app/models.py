@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 class Pengguna(models.Model):
     nama = models.CharField(max_length=255, blank = False, null = False)
@@ -44,7 +45,7 @@ class HasilDeteksi(models.Model):
 class Penanganan(models.Model):
     tingkatdepresi_id = models.IntegerField(blank = False, null = False)
     judul = models.CharField(max_length=255, blank = False, null = False)
-    cover = models.CharField(max_length=255, blank = False, null = False)
+    image = CloudinaryField('image')    
     isi = models.TextField(blank = False, default='')
     createdAt = models.DateTimeField("Created At", auto_now_add=True)
 
@@ -71,7 +72,7 @@ class HistoryPertanyaanJawaban(models.Model):
 
 class Artikel(models.Model):
     judul = models.CharField(max_length=255, blank = False, null = False)
-    cover = models.CharField(max_length=255, blank = False, null = False)
+    image = CloudinaryField('image')
     isi = models.TextField(blank = False, default='')
     createdAt = models.DateTimeField("Created At", auto_now_add=True)
 

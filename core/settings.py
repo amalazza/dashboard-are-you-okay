@@ -8,6 +8,10 @@ from decouple import config
 from unipath import Path
 import dj_database_url
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +40,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'app',
     'rest_framework',
+    'cloudinary',
     # 'pertanyaan',
 ]
 
@@ -138,3 +143,9 @@ STATICFILES_DIRS = (
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+cloudinary.config( 
+  cloud_name = "dddl4nlew", 
+  api_key = "461783483648627", 
+  api_secret = "6cfrUMqtBjcclbDyW6eToRn_D0A" 
+)
