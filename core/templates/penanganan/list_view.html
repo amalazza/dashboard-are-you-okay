@@ -77,13 +77,13 @@
                             {% endif %}
                           </td>
                           <td>
-                            {{ object.judul }}
+                            {{ object.judul|truncatewords:4}}
                           </td>
                           <td>
-                            {{ object.image.url }}
+                            <img src="{{ object.image.url }}" style="width: 50px; height: 50px;">
                           </td>
                           <td>
-                            {{ object.isi }}
+                            {{ object.isi|truncatewords:4}}
                           </td>
                           <td>
                             {{ object.createdAt }}
