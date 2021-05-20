@@ -8,7 +8,7 @@ class Pengguna(models.Model):
     ttl = models.DateField(blank = False, null = False)
     jenis_kelamin = models.CharField(max_length=255, blank = False, null = False)
     pekerjaan = models.CharField(max_length=255, blank = False, null = False)
-    createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    createdAt = models.DateTimeField("Created At", auto_now=True)
 
     def __str__(self):
         return self.nama
@@ -36,7 +36,7 @@ class TingkatDepresi(models.Model):
 class HasilDeteksi(models.Model):
     pengguna_id = models.IntegerField(blank = False, null = False)
     hasil_hitung = models.FloatField(blank = False, null = False)
-    createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    createdAt = models.DateTimeField("Created At", auto_now=True)
     tingkatdepresi_id = models.IntegerField(blank = False, null = False)
 
     def __str__(self):
@@ -47,7 +47,7 @@ class Penanganan(models.Model):
     judul = models.CharField(max_length=255, blank = False, null = False)
     image = CloudinaryField('image')    
     isi = models.TextField(blank = False, default='')
-    createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    createdAt = models.DateTimeField("Created At", auto_now=True)
 
     def __str__(self):
         return self.judul
@@ -74,7 +74,7 @@ class Artikel(models.Model):
     judul = models.CharField(max_length=255, blank = False, null = False)
     image = CloudinaryField('image')
     isi = models.TextField(blank = False, default='')
-    createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    createdAt = models.DateTimeField("Created At", auto_now=True)
 
     def __str__(self):
         return self.judul

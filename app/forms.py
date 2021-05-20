@@ -59,16 +59,18 @@ class PenangananModelForm(forms.ModelForm):
 
     class Meta:
         model = Penanganan
-        fields = '__all__'
+        fields = [
+            'tingkatdepresi_id', 'judul', 'image', 'isi'
+        ]
 
 class ArtikelModelForm(forms.ModelForm):
-    artikel = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                # "placeholder" : "Artikel",                
-                "class": "form-control"
-            }
-        ))
+    # artikel = forms.CharField(
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             # "placeholder" : "Artikel",                
+    #             "class": "form-control"
+    #         }
+    #     ))
 
     class Meta:
         model = Artikel

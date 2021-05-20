@@ -672,7 +672,7 @@ def delete_view_penanganan(request , id=None):
 @login_required(login_url="/login/")
 def update_view_penanganan(request, id=None):
     obj = get_object_or_404(Penanganan, id=id)
-    form = PenangananModelForm(request.POST or None, instance=obj)
+    form = PenangananModelForm(request.POST or None, request.FILES or None, instance=obj)
     context = {
         "form": form
     }
@@ -689,7 +689,7 @@ def update_view_penanganan(request, id=None):
 
 @login_required(login_url="/login/")
 def create_view_penanganan(request):
-    form = PenangananModelForm(request.POST or None)
+    form = PenangananModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
@@ -857,7 +857,7 @@ def delete_view_artikel(request , id=None):
 @login_required(login_url="/login/")
 def update_view_artikel(request, id=None):
     obj = get_object_or_404(Artikel, id=id)
-    form = ArtikelModelForm(request.POST or None, instance=obj)
+    form = ArtikelModelForm(request.POST or None, request.FILES or None, instance=obj)
     context = {
         "form": form
     }
@@ -874,7 +874,7 @@ def update_view_artikel(request, id=None):
 
 @login_required(login_url="/login/")
 def create_view_artikel(request):
-    form = ArtikelModelForm(request.POST or None)
+    form = ArtikelModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         obj = form.save(commit=False)
         obj.save()
