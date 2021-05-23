@@ -1,4 +1,6 @@
 from django import forms
+from cloudinary.models import CloudinaryField
+
 
 
 from .models import *
@@ -14,9 +16,7 @@ class PenggunaModelForm(forms.ModelForm):
 
     class Meta:
         model = Pengguna
-        fields = [
-            'nama', 'email', 'ttl', 'jenis_kelamin', 'pekerjaan'
-        ]
+        fields = "__all__"
 
 class PertanyaanModelForm(forms.ModelForm):
     pertanyaan = forms.CharField(
@@ -29,9 +29,7 @@ class PertanyaanModelForm(forms.ModelForm):
 
     class Meta:
         model = Pertanyaan
-        fields = [
-            'pertanyaan', 'bobot'
-        ]
+        fields = "__all__"
 
 class JawabanModelForm(forms.ModelForm):
     jawaban = forms.CharField(
@@ -44,9 +42,7 @@ class JawabanModelForm(forms.ModelForm):
 
     class Meta:
         model = Jawaban
-        fields = [
-            'jawaban', 'bobot'
-        ]
+        fields = "__all__"
 
 class PenangananModelForm(forms.ModelForm):
     # penanganan = forms.CharField(
@@ -59,21 +55,63 @@ class PenangananModelForm(forms.ModelForm):
 
     class Meta:
         model = Penanganan
-        fields = [
-            'tingkatdepresi_id', 'judul', 'image', 'isi'
-        ]
+        fields = "__all__"
+
+# class ArtikelCreationForm(forms.ModelForm):
+#     judul = forms.CharField(
+#         label=("Judul"),
+#         strip=False,
+#         widget=forms.TextInput,
+#     )
+#     image = forms.FileField(
+#         label=("Cover"),
+#         strip=False,
+#         widget=forms.FileInput,
+#     )
+#     isi = forms.CharField(
+#         label=("Isi"),
+#         strip=False,
+#         widget=forms.Textarea,
+#     )
 
 class ArtikelModelForm(forms.ModelForm):
-    # artikel = forms.CharField(
-    #     widget=forms.TextInput(
-    #         attrs={
-    #             # "placeholder" : "Artikel",                
-    #             "class": "form-control"
-    #         }
-    #     ))
+    judul = forms.CharField(
+        label=("Judul"),
+        # strip=False,
+        widget=forms.TextInput(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Judul",
+                "name": "Judul"
+            }
+        ),
+    )
+    image = forms.FileField(
+        label=("Cover"),
+        # strip=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Cover",
+                "name": "Cover",
+            }
+        ),
+    )
+    isi = forms.CharField(
+        label=("Isi"),
+        # strip=False,
+        widget=forms.Textarea(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Isi",
+                "name": "Isi"
+            }
+        ),
+    )
 
     class Meta:
         model = Artikel
-        fields = [
-            'judul', 'image', 'isi'
-        ]
+        fields = "__all__"

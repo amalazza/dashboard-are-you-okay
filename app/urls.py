@@ -15,7 +15,7 @@ urlpatterns = [
     # re_path(r'^.*\.*', views.pages, name='pages'),
 
 
-
+    # path('coba/', views.clustering_data, name='coba'),
 
     # PENGGUNA API
     path('', views.apiOverviewPengguna, name='apiOverviewPengguna'),

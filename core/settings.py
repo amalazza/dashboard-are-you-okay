@@ -149,3 +149,5 @@ cloudinary.config(
   api_key = "461783483648627", 
   api_secret = "6cfrUMqtBjcclbDyW6eToRn_D0A" 
 )
+
+DATE_INPUT_FORMATS = ('%d-%m-%Y','%Y-%m-%d')

@@ -5,6 +5,8 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models.aggregates import Count
+from django.db.models.fields import IntegerField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
@@ -24,6 +26,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from cloudinary.forms import cl_init_js_callbacks
+from django.db.models import Q, query
+import datetime
+from django.db.models import Count
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -48,7 +58,83 @@ from cloudinary.forms import cl_init_js_callbacks
 
 
 
+# CLUSTERING
 
+# @login_required(login_url="/login/")
+# def clustering_data(request):
+#     obj = HasilDeteksi.objects.filter(
+#         ~Q(tingkatdepresi_id = 1)
+#     ).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(obj=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+#     query_df = pd.DataFrame(obj)
+#     query_df['initial'] = range(1, len(query_df) + 1)
+
+#     selected_df = query_df[['obj']]
+#     inisial_df = query_df[['initial']]
+
+#     # change to array
+#     x_array = np.array(inisial_df)
+
+#     scaler = MinMaxScaler()
+#     x_scaled = scaler.fit_transforms(x_array)
+#     selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
+
+#     kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
+#     query_df['kluster'] = kmeans.labels_
+
+
+
+
+
+
+
+# @login_required(login_url="/login/")
+# def clustering_data(request):
+#     Pengguna.find_age()
+#     born = Pengguna.objects.values('ttl')
+#     makelist = list()
+#     now = datetime.today().date()
+#     age = now - born
+#     obj = HasilDeteksi.objects.filter(
+#         ~Q(tingkatdepresi_id = 1)
+#     ).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(tingkatdepresi=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+#     # print(obj)
+#     context = {
+#         "object_list" : obj
+#     }
+
+#     template = "coba.html"    
+#     return render(request, template, context)
+# #     form = PertanyaanModelForm(request.POST or None)
+# #     if form.is_valid():
+# #         obj = form.save(commit=False)
+# #         obj.save()
+# #         return HttpResponseRedirect(reverse('app:list-pertanyaan'))
+# HasilDeteksi.objects.filter(~Q(createdAt = )).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').annotate(tingkatdepresi=Count('tingkatdepresi_id'))
+
+# .order_by('-createdAt').first()
+# HasilDeteksi.objects.values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('-createdAt').first()
+# .annotate(tingkatdepresi=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', '-createdAt').first()
+# HasilDeteksi.objects(~Q(tingkatdepresi_id = 1)).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(tingkatdepresi=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# obj = HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(datetime.date.today() - 'pengguna_id__ttl', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# datetime.date.today() - self.date_of_birth
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(date.today() - datetime.strptime('pengguna_id__ttl', '%Y-%m-%dT%H:%M:%S.%fZ'), 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(int(date.today() - 'pengguna_id__ttl')), 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# int((datetime.now().date() - self.birth_date).days / 365.25)
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(datetime.today().strftime('%Y-%m-%d') - datetime.strptime('pengguna_id__ttl', '%Y-%m-%d').date(), 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# pd.to_datetime('today').strftime('%Y-%m-%d')
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(pd.to_datetime('today').strftime('%Y-%m-%d') - datetime.strptime('pengguna_id__ttl', '%b %d %Y').strftime('%y-%m-%d'), 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(datetime.strptime('pengguna_id__ttl', '%Y-%m-%d').date()) 
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values('pengguna_id__ttl') 
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values(relativedelta(date.today(), 'pengguna_id__ttl')) 
+# %a %b %d %H:%M:%S %Y
+# HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1)).values('pengguna_id__ttl') 
+# list(Pengguna.objects.extra(select={'date':"to_char(ttl, 'YYYY-MM-DD')".format(IntegerField)}).values_list('date', flat='true'))
+# list(Pengguna.objects.extra(select={'date':"to_char(ttl, 'YYYY')"}).values_list('date', flat='true'))
+# HasilDeteksi.objects.filter(~Q('tingkatdepresi_id__' = 'nama_depresi')).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').annotate(tingkatdepresi=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+
+
+
+# LOGIN
 
 @login_required(login_url="/login/")
 def index(request):
