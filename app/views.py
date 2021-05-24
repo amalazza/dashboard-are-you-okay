@@ -34,6 +34,21 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import davies_bouldin_score
+
+from django.http import HttpResponse
+from django.shortcuts import render
+import pandas as pd
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import scale, StandardScaler
+from numpy import random, float, array
+import numpy as np
+import seaborn as sns
+from matplotlib import pylab
+from pylab import *
+from io import BytesIO
+import base64
 
 
 
@@ -61,27 +76,95 @@ from sklearn.preprocessing import MinMaxScaler
 # CLUSTERING
 
 # @login_required(login_url="/login/")
-# def clustering_data(request):
-#     obj = HasilDeteksi.objects.filter(
-#         ~Q(tingkatdepresi_id = 1)
-#     ).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(obj=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
-#     query_df = pd.DataFrame(obj)
-#     query_df['initial'] = range(1, len(query_df) + 1)
+def clustering_data(request):
+    obj = HasilDeteksi.objects.filter(
+        ~Q(tingkatdepresi_id = 1)
+    ).values('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(obj=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi')
+    query_df = pd.DataFrame(obj)
+    query_df['initial'] = range(1, len(query_df) + 1)
 
-#     selected_df = query_df[['obj']]
-#     inisial_df = query_df[['initial']]
+    selected_df = query_df[['obj']]
+    inisial_df = query_df[['initial']]
 
-#     # change to array
-#     x_array = np.array(inisial_df)
+    # change to array
+    x_array = np.array(inisial_df)
 
-#     scaler = MinMaxScaler()
-#     x_scaled = scaler.fit_transforms(x_array)
-#     selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
+    scaler = MinMaxScaler()
+    x_scaled = scaler.fit_transform(x_array)
+    selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
+    # selected_df['initial'] = selected_df['initial'].reshape(-1, 1)
+    # sdi=pd.DataFrame(np.array(x_scaled))
+    # sdi=selected_df['initial2']
+    
+    
+    scoreDBI = [None] * 5
+    for i in range(2, 5):
+        kmeans_test = KMeans(n_clusters=i, random_state=0).fit(selected_df)
+        DBI = davies_bouldin_score(selected_df, kmeans_test.labels_)
+        scoreDBI[i] = DBI
 
-#     kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
-#     query_df['kluster'] = kmeans.labels_
+    del scoreDBI[0:2]
+    get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
+
+    kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
+    # kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(sdi)
+    query_df['kluster'] = kmeans.labels_
+    y_kmeans = kmeans.fit_predict(x_scaled)
+    centers = np.array(kmeans.cluster_centers_)
+
+    plt.figure(figsize=(7, 5))
+    # plt.scatter(centers[:, 0], centers[:, 1], marker="x", color='r')
+    # plt.scatter(x_scaled.iloc[:, 0], x_scaled.iloc[:, 1], c=[
+    #             plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
+    plt.scatter(centers[:, 0], centers[:, 0], marker="x", color='r')
+    plt.scatter(x_scaled[:, 0], x_scaled[:, 0], c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic = base64.b64encode(image_png)
+    graphic = graphic.decode('utf-8')
+    pylab.close()
+
+    # qs = qs[['State', 'Total']]
+    # arr_state = np.array(qs.iloc[:, 0])
+    # index = np.arange(36)
+    # arr_total = np.array(qs.iloc[:, 1])
+    # plt.figure(figsize=(11, 5))
+    # plt.bar(index, arr_total)
+    # plt.xlabel('State', fontsize=10)
+    # plt.ylabel('Total No of crimes', fontsize=10)
+    # plt.xticks(index, arr_state, fontsize=7, rotation=90)
+    # plt.title('Total Crime Vs State')
+    # plt.tight_layout()
+    # buffer = BytesIO()
+    # plt.savefig(buffer, format='png')
+    # buffer.seek(0)
+    # image_png = buffer.getvalue()
+    # buffer.close()
+    # graphic1 = base64.b64encode(image_png)
+    # graphic1 = graphic1.decode('utf-8')
+    # pylab.close()
+    # df = df.sort_values(by=['Crime_clusters'], ascending=True)
+    context = {
+        'title': "Applied K-Means",
+        'k': get_best_cluster,
+        'df': query_df.to_html(classes=["table-bordered", "table-striped", "table-hover", "text-center"]),
+        # 'qs': qs.to_html(classes=["table-bordered", "table-striped", "table-hover", "text-center"]),
+        'graphic': graphic,
+        # 'graphic1': graphic1,
+    }
+    return render(request, 'coba.html', context)
 
 
+    # plt.scatter(x_scaled, y_kmeans) 
+    # plt.show()
+
+    # kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
+    # query_df['kluster'] = kmeans.labels_
+    # X = selected_df['initial'].iloc[:, [x_scaled]].values
 
 
 

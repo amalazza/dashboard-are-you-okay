@@ -11,9 +11,10 @@
         <div class="col-md-12">
             <div class="card card-profile">
                 <div class="card-body">
-                    {% for object in object_list %}
-                    <p>{{ object.pengguna_id }}</p>
-                    {% endfor %}
+                    <p class="mx-sm-1 lead">Selected cluster size is {{ k }}.</p>
+<p class="mx-sm-1 lead">Cluster assigned to districts are:-</p><br />
+{{ df | safe }}<br />
+<img src="data:image/png;base64,{{graphic|safe}}" class="mx-sm-1"><br /><br />
                 </div>
             </div>
         </div>
