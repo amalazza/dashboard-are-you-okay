@@ -15,7 +15,7 @@
               <i class="material-icons">people</i>
             </div>
             <p class="card-category">Tidak Depresi</p>
-            <h3 class="card-title">100
+            <h3 class="card-title">{{ obj_tidakdepresi }}
             </h3>
           </div>
           <div class="card-footer">
@@ -32,7 +32,7 @@
               <i class="material-icons">people</i>
             </div>
             <p class="card-category">Depresi Ringan</p>
-            <h3 class="card-title">90</h3>
+            <h3 class="card-title">{{ obj_depresiringan }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -48,7 +48,7 @@
               <i class="material-icons">people</i>
             </div>
             <p class="card-category">Depresi Sedang</p>
-            <h3 class="card-title">80</h3>
+            <h3 class="card-title">{{ obj_depresisedang }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -63,8 +63,8 @@
             <div class="card-icon">
               <i class="material-icons">people</i>
             </div>
-            <p class="card-category">Depresi Tinggi</p>
-            <h3 class="card-title">70</h3>
+            <p class="card-category">Depresi Berat</p>
+            <h3 class="card-title">{{ obj_depresiberat }}</h3>
           </div>
           <div class="card-footer">
             <div class="stats">
@@ -110,18 +110,19 @@
               <div class="tab-pane active" id="sebaran">
                 <div class="col-md-12">
                   <div class="card card-chart">
-                    <div class="card-header card-header-success">
-                      <div class="ct-chart" id="dailySalesChart"></div>
+                    <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                      <h4 class="card-title">Pengelompokan Data Depresi</h4>
                     </div>
                     <div class="card-body">
-                      <h4 class="card-title">Pengelompokan Data Depresi</h4>
                       <p class="card-category">
-                         Kelompok Tertinggi: S <span class="text-success"><i class="fa fa-long-arrow-up"></i></span>
+                        <hr>
+                        {{ df | safe }}
                       </p>
+                      <img src="data:image/png;base64,{{graphic|safe}}" class="img-fluid">
                     </div>
                     <div class="card-footer">
                       <div class="stats">
-                        <i class="material-icons">access_time</i> updated 4 minutes ago
+                        Selected cluster size is {{ k }}
                       </div>
                     </div>
                   </div>
@@ -130,16 +131,14 @@
               <div class="tab-pane" id="batang">
                 <div class="col-md-12">
                     <div class="card card-chart">
-                      <div class="card-header card-header-warning">
-                        <div class="ct-chart" id="websiteViewsChart"></div>
+                      <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                        <h4 class="card-title">Diagram Batang: Jumlah Depresi dengan Jenis Depresi</h4>
                       </div>
                       <div class="card-body">
-                        <h4 class="card-title">Email Subscription</h4>
-                        <p class="card-category">Last Campaign Performance</p>
+                        <img src="data:image/png;base64,{{graphic1|safe}}" class="img-fluid">
                       </div>
                       <div class="card-footer">
                         <div class="stats">
-                          <i class="material-icons">access_time</i> campaign sent 2 days ago
                         </div>
                       </div>
                     </div>
@@ -148,16 +147,14 @@
               <div class="tab-pane" id="donat">
                 <div class="col-md-12">
                   <div class="card card-chart">
-                    <div class="card-header card-header-danger">
-                      <div class="ct-chart" id="completedTasksChart"></div>
+                    <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+                      <h4 class="card-title">Diagram Donat: Jumlah Depresi dengan Jenis Depresi</h4>
                     </div>
                     <div class="card-body">
-                      <h4 class="card-title">Completed Tasks</h4>
-                      <p class="card-category">Last Campaign Performance</p>
+                      <img src="data:image/png;base64,{{graphic2|safe}}" class="img-fluid">
                     </div>
                     <div class="card-footer">
                       <div class="stats">
-                        <i class="material-icons">access_time</i> campaign sent 2 days ago
                       </div>
                     </div>
                   </div>
