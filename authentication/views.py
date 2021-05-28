@@ -12,6 +12,9 @@ from django.contrib.auth.models import User
 from django.forms.utils import ErrorList
 from django.http import HttpResponse
 from .forms import LoginForm, SignUpForm
+from django.contrib.auth import logout
+from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
+
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -33,6 +36,10 @@ def login_view(request):
             msg = 'Error validating the form'    
 
     return render(request, "accounts/login.html", {"form": form, "msg" : msg})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 def register_user(request):
 

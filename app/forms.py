@@ -45,6 +45,59 @@ class JawabanModelForm(forms.ModelForm):
         fields = "__all__"
 
 class PenangananModelForm(forms.ModelForm):
+    # TingkatDepresi = forms.IntegerField(
+    #     label=("Tingkat Depresi"),
+    #     # strip=False,
+    #     widget=forms.NumberInput(
+    #         attrs={
+    #             # "placeholder" : "Penanganan",                
+    #             "class": "form-control",
+    #             "id": "Tingkat Depresi",
+    #             "name": "Tingkat Depresi"
+    #         }
+    #     ),
+    # )
+    judul = forms.CharField(
+        label=("Judul"),
+        # strip=False,
+        widget=forms.TextInput(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Judul",
+                "name": "Judul"
+            }
+        ),
+    )
+    image = forms.FileField(
+        label=("Cover"),
+        # strip=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Cover",
+                "name": "Cover",
+            }
+        ),
+    )
+    isi = forms.CharField(
+        label=("Isi"),
+        # strip=False,
+        widget=forms.Textarea(
+            attrs={
+                # "placeholder" : "Penanganan",                
+                "class": "form-control",
+                "id": "Isi",
+                "name": "Isi"
+            }
+        ),
+    )
+
+    class Meta:
+        model = Penanganan
+        fields = "__all__"
+
     # penanganan = forms.CharField(
     #     widget=forms.TextInput(
     #         attrs={
@@ -53,9 +106,9 @@ class PenangananModelForm(forms.ModelForm):
     #         }
     #     ))
 
-    class Meta:
-        model = Penanganan
-        fields = "__all__"
+    # class Meta:
+    #     model = Penanganan
+    #     fields = "__all__"
 
 # class ArtikelCreationForm(forms.ModelForm):
 #     judul = forms.CharField(

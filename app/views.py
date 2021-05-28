@@ -52,6 +52,8 @@ from pylab import *
 from io import BytesIO
 import base64
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 
 
@@ -136,6 +138,9 @@ def index(request):
     graphic = base64.b64encode(image_png)
     graphic = graphic.decode('utf-8')
     pylab.close()
+
+    # query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
+    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
 
     context = {
         'title': "Applied K-Means",
@@ -274,9 +279,20 @@ def create_view_pengguna(request):
 def detail_view_pengguna(request, id=None):
     print(id)
     qs = get_object_or_404(Pengguna, id=id)
+    obj = HasilDeteksi.objects.filter(pengguna_id=id).order_by('-createdAt')
+    page = request.GET.get('page', 1)
+    paginator = Paginator(obj, 5)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
+
     print(qs)
     context = {
-        "object" : qs
+        "object" : qs,
+        "object_list" : obj
     }
 
     template = "pengguna/detail_view.html"
@@ -286,6 +302,14 @@ def detail_view_pengguna(request, id=None):
 def list_view_pengguna(request):
     query = request.GET.get("query", None)
     obj = Pengguna.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(obj, 5)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
     if query is not None:
         obj = obj.filter(title__icontains=query)
     
@@ -812,6 +836,15 @@ def detail_view_penanganan(request, id=None):
 def list_view_penanganan(request):
     query = request.GET.get("query", None)
     obj = Penanganan.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(obj, 5)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
+
     if query is not None:
         obj = obj.filter(title__icontains=query)
     
@@ -997,6 +1030,15 @@ def detail_view_artikel(request, id=None):
 def list_view_artikel(request):
     query = request.GET.get("query", None)
     obj = Artikel.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(obj, 5)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
+
     if query is not None:
         obj = obj.filter(title__icontains=query)
     
@@ -1174,3 +1216,33 @@ def list_view_artikel(request):
 # list(Pengguna.objects.extra(select={'date':"to_char(ttl, 'YYYY-MM-DD')".format(IntegerField)}).values_list('date', flat='true'))
 # list(Pengguna.objects.extra(select={'date':"to_char(ttl, 'YYYY')"}).values_list('date', flat='true'))
 # HasilDeteksi.objects.filter(~Q('tingkatdepresi_id__' = 'nama_depresi')).values('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').annotate(tingkatdepresi=Count('tingkatdepresi_id')).order_by('pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+
+
+    # seed_random = 1
+    # fitted_kmeans = {}
+    # labels_kmeans = {}
+    # df_scores = []
+    # k_values_to_try = np.arange(2, 15)
+    # for n_clusters in k_values_to_try:
+    #     kmeans = KMeans(n_clusters=n_clusters, random_state=seed_random, )
+    #     labels_clusters = kmeans.fit_predict(selected_df) 
+    #     fitted_kmeans[n_clusters] = kmeans
+    #     labels_kmeans[n_clusters] = labels_clusters
+    #     db = davies_bouldin_score(selected_df, labels_clusters) 
+    #     tmp_scores = {"n_clusters": n_clusters,"davies_bouldin_score": db,}
+    #     df_scores.append(tmp_scores)
+    # df_scores = pd.DataFrame(df_scores)
+    # df_scores.set_index("n_clusters", inplace=True)
+
+    # # kmeans = KMeans(n_clusters=n_clusters, random_state=seed_random).fit(selected_df)
+    # # query_df['kluster'] = kmeans.labels_
+    # kmeans = KMeans(n_clusters=n_clusters, random_state=seed_random, )
+    # labels_clusters = kmeans.fit(selected_df) 
+    # fitted_kmeans[n_clusters] = kmeans
+    # labels_kmeans[n_clusters] = labels_clusters
+    
+    # plt.scatter(selected_df['initial'], selected_df['depresi'], 
+    # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(n_clusters)+1)) for i in kmeans.labels_], label=labels_clusters)
+    # plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan, dan Jenis Depresi')
+    # plt.ylabel('Jumlah Depresi')
+    # plt.legend()
