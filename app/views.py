@@ -124,10 +124,22 @@ def index(request):
     kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
     query_df['kluster'] = kmeans.labels_
     
-    plt.scatter(selected_df['initial'], selected_df['depresi'], 
-    c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
+    scatter_x = np.array(selected_df['initial'])
+    scatter_y = np.array(selected_df['depresi'])
+    group = kmeans.labels_
+    cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan'}
+
+    fig, ax = plt.subplots()
+    for g in np.unique(group):
+        ix = np.where(group == g)
+        ax.scatter(scatter_x[ix], scatter_y[ix], c = cdict[g], label =g, s = 100)
+    ax.legend()
+    
+    # plt.scatter(selected_df['initial'], selected_df['depresi'], 
+    # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
     plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan, dan Jenis Depresi')
     plt.ylabel('Jumlah Depresi')
+    plt.grid()
     
     plt.tight_layout()
     buffer = BytesIO()
