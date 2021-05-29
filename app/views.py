@@ -127,7 +127,7 @@ def index(request):
     scatter_x = np.array(selected_df['initial'])
     scatter_y = np.array(selected_df['depresi'])
     group = kmeans.labels_
-    cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan'}
+    cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan', 10: 'yellow', 11: 'steelblue', 12: 'palegreen', 13: 'indigo', 14: 'crimson', 15: 'sienna'}
 
     fig, ax = plt.subplots()
     for g in np.unique(group):
