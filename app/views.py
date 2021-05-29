@@ -97,8 +97,8 @@ def index(request):
     depresi = HasilDeteksi.objects.filter(
         ~Q(tingkatdepresi_id = 1)
     ).values(
-        'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(
-            depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi')
+        'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').annotate(
+            depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
     query_df = pd.DataFrame(depresi)
     query_df['initial'] = range(1, len(query_df) + 1)
 
@@ -137,7 +137,7 @@ def index(request):
     
     # plt.scatter(selected_df['initial'], selected_df['depresi'], 
     # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
-    plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan, dan Jenis Depresi')
+    plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan')
     plt.ylabel('Jumlah Depresi')
     plt.grid()
     
@@ -152,7 +152,7 @@ def index(request):
     pylab.close()
 
     # query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
-    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
+    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jumlah Depresi', 'Initial', 'Cluster']
 
     context = {
         'title': "Applied K-Means",
