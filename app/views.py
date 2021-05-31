@@ -27,7 +27,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from cloudinary.forms import cl_init_js_callbacks
-from django.db.models import Q, query
+from django.db.models import Q, query, Exists, F
 import datetime
 from django.db.models import Count
 import numpy as np
@@ -94,15 +94,18 @@ def index(request):
     pylab.close()
 
 
-    depresi = HasilDeteksi.objects.filter(
-        ~Q(tingkatdepresi_id = 1)
-    ).values(
-        'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan').annotate(
-            depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan')
+    # depresi = HasilDeteksi.objects.filter(
+    #     ~Q(tingkatdepresi_id = 1)
+    # ).values(
+    #     'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(
+    #         depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi')
+    depresi = HasilDeteksi.objects.values(
+        'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id').annotate(
+            depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id')
     query_df = pd.DataFrame(depresi)
     query_df['initial'] = range(1, len(query_df) + 1)
 
-    selected_df = query_df[['depresi']]
+    selected_df = query_df[['tingkatdepresi_id']]
     inisial_df = query_df[['initial']]
 
     # change to array
@@ -125,20 +128,22 @@ def index(request):
     query_df['kluster'] = kmeans.labels_
     
     scatter_x = np.array(selected_df['initial'])
-    scatter_y = np.array(selected_df['depresi'])
+    scatter_y = np.array(selected_df['tingkatdepresi_id'])
     group = kmeans.labels_
     cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan', 10: 'yellow', 11: 'steelblue', 12: 'palegreen', 13: 'indigo', 14: 'crimson', 15: 'sienna'}
+    # centers = np.array(kmeans.cluster_centers_)
 
     fig, ax = plt.subplots()
     for g in np.unique(group):
         ix = np.where(group == g)
+        # ax.scatter(centers[:, 0], centers[:, 0], marker="x", color='r')
         ax.scatter(scatter_x[ix], scatter_y[ix], c = cdict[g], label =g, s = 100)
     ax.legend()
     
     # plt.scatter(selected_df['initial'], selected_df['depresi'], 
     # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
     plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan')
-    plt.ylabel('Jumlah Depresi')
+    plt.ylabel('Jenis Depresi')
     plt.grid()
     
     plt.tight_layout()
@@ -152,7 +157,9 @@ def index(request):
     pylab.close()
 
     # query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
-    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jumlah Depresi', 'Initial', 'Cluster']
+    query_df.drop('initial', inplace=True, axis=1)
+    query_df.drop('depresi', inplace=True, axis=1)
+    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Cluster']
 
     context = {
         'title': "Applied K-Means",
