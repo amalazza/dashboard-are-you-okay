@@ -22,3 +22,6 @@ PGUSER=postgres PGPASSWORD=malacantik heroku pg:push postgres://localhost/areyou
 heroku config:set DISABLE_COLLECTSTATIC=1
 
 git push heroku master
+
+
+pip freeze > requirements.txt 

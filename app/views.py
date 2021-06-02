@@ -33,6 +33,7 @@ from django.db.models import Count
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import davies_bouldin_score
@@ -70,7 +71,7 @@ def index(request):
     bar_depresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').annotate(bar_depresi=Count('tingkatdepresi_id'))
     query_df_bar = pd.DataFrame(bar_depresi)
     plt.bar(query_df_bar['tingkatdepresi_id__nama_depresi'], query_df_bar['bar_depresi']) 
-    plt.xlabel('Jenis Depresi')
+    plt.xlabel('Tingkat Depresi')
     plt.ylabel('Jumlah Depresi')
     plt.tight_layout()
     buffer = BytesIO()
@@ -94,80 +95,120 @@ def index(request):
     pylab.close()
 
 
-    # depresi = HasilDeteksi.objects.filter(
-    #     ~Q(tingkatdepresi_id = 1)
-    # ).values(
-    #     'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(
-    #         depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi')
-    depresi = HasilDeteksi.objects.values(
-        'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id').annotate(
-            depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id')
-    query_df = pd.DataFrame(depresi)
-    query_df['initial'] = range(1, len(query_df) + 1)
+    umur = HasilDeteksi.objects.values('pengguna_id__umur')
+    df_umur = pd.DataFrame(umur)
+    df_umur.columns = ['Umur']
+    df=pd.DataFrame(df_umur)
 
-    selected_df = query_df[['tingkatdepresi_id']]
-    inisial_df = query_df[['initial']]
 
-    # change to array
-    x_array = np.array(inisial_df)
+    jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin')
+    df_jenkel = pd.DataFrame(jenkel)
+    mapping = {'Laki-laki': 1, 'Perempuan': 2}
+    df_jenkel['Jenis Kelamin'] = df_jenkel.replace({'pengguna_id__jenis_kelamin': mapping})
+    df_jenkel.drop('pengguna_id__jenis_kelamin', inplace=True, axis=1)
+    df['Jenis Kelamin'] = df_jenkel[['Jenis Kelamin']]
 
-    scaler = MinMaxScaler()
-    x_scaled = scaler.fit_transform(x_array)
-    selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
-    
+
+    pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan')
+    df_pekerjaan = pd.DataFrame(pekerjaan)
+    mapping = {'Kerja': 1, 'Pelajar/Mahasiswa': 2, 'Pelajar/Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
+    df_pekerjaan['Status Pekerjaan'] = df_pekerjaan.replace({'pengguna_id__pekerjaan': mapping})
+    df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
+    df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
+
+
+    tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id')
+    df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+    df_tingkatdepresi.columns = ['Tingkat Depresi']
+    df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
+
+    scaler = preprocessing.MinMaxScaler()
+    features_normal = scaler.fit_transform(df)
+
+
     scoreDBI = [None] * 10
     for i in range(2, 10):
-        kmeans_test = KMeans(n_clusters=i, random_state=0).fit(selected_df)
-        DBI = davies_bouldin_score(selected_df, kmeans_test.labels_)
+        kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
+        DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
         scoreDBI[i] = DBI
 
     del scoreDBI[0:2]
     get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
 
-    kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
-    query_df['kluster'] = kmeans.labels_
-    
-    scatter_x = np.array(selected_df['initial'])
-    scatter_y = np.array(selected_df['tingkatdepresi_id'])
-    group = kmeans.labels_
-    cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan', 10: 'yellow', 11: 'steelblue', 12: 'palegreen', 13: 'indigo', 14: 'crimson', 15: 'sienna'}
-    # centers = np.array(kmeans.cluster_centers_)
+    # # Plot the elbow
+    # plt.plot(range(2, 10), scoreDBI, 'bx-')
+    # plt.xlabel('k')
+    # plt.ylabel('Inertia')
+    # plt.show()
 
-    fig, ax = plt.subplots()
-    for g in np.unique(group):
-        ix = np.where(group == g)
-        # ax.scatter(centers[:, 0], centers[:, 0], marker="x", color='r')
-        ax.scatter(scatter_x[ix], scatter_y[ix], c = cdict[g], label =g, s = 100)
-    ax.legend()
-    
-    # plt.scatter(selected_df['initial'], selected_df['depresi'], 
-    # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
-    plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan')
-    plt.ylabel('Jenis Depresi')
+    kmeans = KMeans(n_clusters=get_best_cluster).fit(features_normal)
+
+    labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
+    labeled = pd.concat((df,labels),axis=1)
+    labeled = labeled.rename({0:'labels'},axis=1)
+
+    sns.lmplot(x='Umur',y='Tingkat Depresi',data=labeled,hue='labels',fit_reg=False)
     plt.grid()
-    
     plt.tight_layout()
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     image_png = buffer.getvalue()
     buffer.close()
-    graphic = base64.b64encode(image_png)
-    graphic = graphic.decode('utf-8')
+    graphic_umur_tingkatdepresi = base64.b64encode(image_png)
+    graphic_umur_tingkatdepresi = graphic_umur_tingkatdepresi.decode('utf-8')
     pylab.close()
 
-    # query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
-    query_df.drop('initial', inplace=True, axis=1)
-    query_df.drop('depresi', inplace=True, axis=1)
-    query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Cluster']
+    sns.lmplot(x='Jenis Kelamin',y='Tingkat Depresi',data=labeled,hue='labels',fit_reg=False)
+    plt.grid()
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_jeniskelamin_tingkatdepresi = base64.b64encode(image_png)
+    graphic_jeniskelamin_tingkatdepresi = graphic_jeniskelamin_tingkatdepresi.decode('utf-8')
+    pylab.close()
+
+    sns.lmplot(x='Status Pekerjaan',y='Tingkat Depresi',data=labeled,hue='labels',fit_reg=False)
+    plt.grid()
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_statuspekerjaan_tingkatdepresi = base64.b64encode(image_png)
+    graphic_statuspekerjaan_tingkatdepresi = graphic_statuspekerjaan_tingkatdepresi.decode('utf-8')
+    pylab.close()
+
+    mapping = {1: 'Laki-laki (1)', 2: 'Perempuan (2)'}
+    labeled = labeled.replace({'Jenis Kelamin': mapping}) 
+
+    mapping = {1: 'Kerja (1)', 2: 'Pelajar/Mahasiswa (2)', 3: 'Pelajar/Mahasiswa dan Kerja (3)', 4: 'Tidak Kerja (4)'}
+    labeled = labeled.replace({'Status Pekerjaan': mapping})
+
+    mapping = {1: 'Tidak Depresi (1)', 2: 'Depresi Ringan (2)', 3: 'Depresi Sedang (3)', 4: 'Depresi Berat (4)'}
+    labeled = labeled.replace({'Tingkat Depresi': mapping})
+
+    labeled.columns = ['Umur', 'Jenis Kelamin (Kode)', 'Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']
+    labeled.index = range(1, labeled.shape[0] + 1) 
+    # dfStyler = labeled.style.set_properties(**{'text-align': 'right'})
+    # dfStyler.set_table_styles([dict(selector='th', props=[('text-align', 'right')])])
+    # dfStyler.render()
+
 
     context = {
         'title': "Applied K-Means",
         'k': get_best_cluster,
-        'df': query_df.to_html(classes=["table-bordered", "table-responsive", "table-striped", "table-hover", "text-center"]),
-        'graphic': graphic,
+        'df': labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'graphic1': graphic1,
         'graphic2': graphic2,
+        'graphic_umur_tingkatdepresi': graphic_umur_tingkatdepresi,
+        'graphic_jeniskelamin_tingkatdepresi': graphic_jeniskelamin_tingkatdepresi,
+        'graphic_statuspekerjaan_tingkatdepresi': graphic_statuspekerjaan_tingkatdepresi,
         'obj_tidakdepresi': tidakdepresi,
         'obj_depresiringan': depresiringan,
         'obj_depresisedang': depresisedang,
@@ -299,14 +340,14 @@ def detail_view_pengguna(request, id=None):
     print(id)
     qs = get_object_or_404(Pengguna, id=id)
     obj = HasilDeteksi.objects.filter(pengguna_id=id).order_by('-createdAt')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(obj, 5)
-    try:
-        obj = paginator.page(page)
-    except PageNotAnInteger:
-        obj = paginator.page(1)
-    except EmptyPage:
-        obj = paginator.page(paginator.num_pages)
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(obj, 5)
+    # try:
+    #     obj = paginator.page(page)
+    # except PageNotAnInteger:
+    #     obj = paginator.page(1)
+    # except EmptyPage:
+    #     obj = paginator.page(paginator.num_pages)
 
     print(qs)
     context = {
@@ -321,14 +362,14 @@ def detail_view_pengguna(request, id=None):
 def list_view_pengguna(request):
     query = request.GET.get("query", None)
     obj = Pengguna.objects.all()
-    page = request.GET.get('page', 1)
-    paginator = Paginator(obj, 5)
-    try:
-        obj = paginator.page(page)
-    except PageNotAnInteger:
-        obj = paginator.page(1)
-    except EmptyPage:
-        obj = paginator.page(paginator.num_pages)
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(obj, 5)
+    # try:
+    #     obj = paginator.page(page)
+    # except PageNotAnInteger:
+    #     obj = paginator.page(1)
+    # except EmptyPage:
+    #     obj = paginator.page(paginator.num_pages)
     if query is not None:
         obj = obj.filter(title__icontains=query)
     
@@ -855,14 +896,14 @@ def detail_view_penanganan(request, id=None):
 def list_view_penanganan(request):
     query = request.GET.get("query", None)
     obj = Penanganan.objects.all()
-    page = request.GET.get('page', 1)
-    paginator = Paginator(obj, 5)
-    try:
-        obj = paginator.page(page)
-    except PageNotAnInteger:
-        obj = paginator.page(1)
-    except EmptyPage:
-        obj = paginator.page(paginator.num_pages)
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(obj, 5)
+    # try:
+    #     obj = paginator.page(page)
+    # except PageNotAnInteger:
+    #     obj = paginator.page(1)
+    # except EmptyPage:
+    #     obj = paginator.page(paginator.num_pages)
 
     if query is not None:
         obj = obj.filter(title__icontains=query)
@@ -1049,14 +1090,14 @@ def detail_view_artikel(request, id=None):
 def list_view_artikel(request):
     query = request.GET.get("query", None)
     obj = Artikel.objects.all()
-    page = request.GET.get('page', 1)
-    paginator = Paginator(obj, 5)
-    try:
-        obj = paginator.page(page)
-    except PageNotAnInteger:
-        obj = paginator.page(1)
-    except EmptyPage:
-        obj = paginator.page(paginator.num_pages)
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(obj, 5)
+    # try:
+    #     obj = paginator.page(page)
+    # except PageNotAnInteger:
+    #     obj = paginator.page(1)
+    # except EmptyPage:
+    #     obj = paginator.page(paginator.num_pages)
 
     if query is not None:
         obj = obj.filter(title__icontains=query)
@@ -1265,3 +1306,126 @@ def list_view_artikel(request):
     # plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan, dan Jenis Depresi')
     # plt.ylabel('Jumlah Depresi')
     # plt.legend()
+
+
+
+
+# CLUSTERING DATA
+
+# @login_required(login_url="/login/")
+# def index(request):
+#     tidakdepresi = HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 2) & ~Q(tingkatdepresi_id = 3) & ~Q(tingkatdepresi_id = 4)).count()
+#     depresiringan = HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1) & ~Q(tingkatdepresi_id = 3) & ~Q(tingkatdepresi_id = 4)).count()
+#     depresisedang = HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1) & ~Q(tingkatdepresi_id = 2) & ~Q(tingkatdepresi_id = 4)).count()
+#     depresiberat = HasilDeteksi.objects.filter(~Q(tingkatdepresi_id = 1) & ~Q(tingkatdepresi_id = 2) & ~Q(tingkatdepresi_id = 3)).count()
+
+#     bar_depresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').annotate(bar_depresi=Count('tingkatdepresi_id'))
+#     query_df_bar = pd.DataFrame(bar_depresi)
+#     plt.bar(query_df_bar['tingkatdepresi_id__nama_depresi'], query_df_bar['bar_depresi']) 
+#     plt.xlabel('Jenis Depresi')
+#     plt.ylabel('Jumlah Depresi')
+#     plt.tight_layout()
+#     buffer = BytesIO()
+#     plt.savefig(buffer, format='png')
+#     buffer.seek(0)
+#     image_png = buffer.getvalue()
+#     buffer.close()
+#     graphic1 = base64.b64encode(image_png)
+#     graphic1 = graphic1.decode('utf-8')
+#     pylab.close()
+
+#     plt.pie(query_df_bar['bar_depresi'],labels=query_df_bar['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
+#     plt.tight_layout()
+#     buffer = BytesIO()
+#     plt.savefig(buffer, format='png')
+#     buffer.seek(0)
+#     image_png = buffer.getvalue()
+#     buffer.close()
+#     graphic2 = base64.b64encode(image_png)
+#     graphic2 = graphic2.decode('utf-8')
+#     pylab.close()
+
+
+#     # depresi = HasilDeteksi.objects.filter(
+#     #     ~Q(tingkatdepresi_id = 1)
+#     # ).values(
+#     #     'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi').annotate(
+#     #         depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi')
+#     depresi = HasilDeteksi.objects.values(
+#         'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id').annotate(
+#             depresi=Count('tingkatdepresi_id')).order_by('pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id')
+#     query_df = pd.DataFrame(depresi)
+#     query_df['initial'] = range(1, len(query_df) + 1)
+
+#     selected_df = query_df[['tingkatdepresi_id']]
+#     inisial_df = query_df[['initial']]
+
+#     # change to array
+#     x_array = np.array(inisial_df)
+
+#     scaler = MinMaxScaler()
+#     x_scaled = scaler.fit_transform(x_array)
+#     selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
+    
+#     scoreDBI = [None] * 10
+#     for i in range(2, 10):
+#         kmeans_test = KMeans(n_clusters=i, random_state=0).fit(selected_df)
+#         DBI = davies_bouldin_score(selected_df, kmeans_test.labels_)
+#         scoreDBI[i] = DBI
+
+#     del scoreDBI[0:2]
+#     get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
+
+#     kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(selected_df)
+#     query_df['kluster'] = kmeans.labels_
+    
+#     scatter_x = np.array(selected_df['initial'])
+#     scatter_y = np.array(selected_df['tingkatdepresi_id'])
+#     group = kmeans.labels_
+#     cdict = {0: 'pink', 1: 'blue', 2: 'orange', 3: 'green', 4: 'red', 5: 'purple', 6: 'brown', 7: 'gray', 8: 'olive', 9: 'cyan', 10: 'yellow', 11: 'steelblue', 12: 'palegreen', 13: 'indigo', 14: 'crimson', 15: 'sienna'}
+#     # centers = np.array(kmeans.cluster_centers_)
+
+#     fig, ax = plt.subplots()
+#     for g in np.unique(group):
+#         ix = np.where(group == g)
+#         # ax.scatter(centers[:, 0], centers[:, 0], marker="x", color='r')
+#         ax.scatter(scatter_x[ix], scatter_y[ix], c = cdict[g], label =g, s = 100)
+#     ax.legend()
+    
+#     # plt.scatter(selected_df['initial'], selected_df['depresi'], 
+#     # c=[plt.cm.get_cmap("Spectral")(float(i) / (int(get_best_cluster)+1)) for i in kmeans.labels_])
+#     plt.xlabel('Inisialisasi: Umur, Jenis Kelamin, Status Pekerjaan')
+#     plt.ylabel('Jenis Depresi')
+#     plt.grid()
+    
+#     plt.tight_layout()
+#     buffer = BytesIO()
+#     plt.savefig(buffer, format='png')
+#     buffer.seek(0)
+#     image_png = buffer.getvalue()
+#     buffer.close()
+#     graphic = base64.b64encode(image_png)
+#     graphic = graphic.decode('utf-8')
+#     pylab.close()
+
+#     # query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Jumlah Depresi', 'Initial', 'Cluster']
+#     query_df.drop('initial', inplace=True, axis=1)
+#     query_df.drop('depresi', inplace=True, axis=1)
+#     query_df.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Jenis Depresi', 'Cluster']
+
+#     context = {
+#         'title': "Applied K-Means",
+#         'k': get_best_cluster,
+#         'df': query_df.to_html(classes=["table-bordered", "table-responsive", "table-striped", "table-hover", "text-center"]),
+#         'graphic': graphic,
+#         'graphic1': graphic1,
+#         'graphic2': graphic2,
+#         'obj_tidakdepresi': tidakdepresi,
+#         'obj_depresiringan': depresiringan,
+#         'obj_depresisedang': depresisedang,
+#         'obj_depresiberat': depresiberat,
+#     }
+#     context['segment'] = 'index'
+
+#     html_template = loader.get_template( 'index.html' )
+#     return HttpResponse(html_template.render(context, request))
