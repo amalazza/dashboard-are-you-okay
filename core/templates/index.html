@@ -20,7 +20,7 @@
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons">update</i> Just Updated
+              <i class="material-icons">update</i> Refresh Page to Update
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons">update</i> Just Updated
+              <i class="material-icons">update</i> Refresh Page to Update
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons">update</i> Just Updated
+              <i class="material-icons">update</i> Refresh Page to Update
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons">update</i> Just Updated
+              <i class="material-icons">update</i> Refresh Page to Update
             </div>
           </div>
         </div>
@@ -111,24 +111,33 @@
                 <div class="col-md-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                      <h4 class="card-title">Pengelompokan Data Depresi</h4>
+                      <h4 class="card-title">Pengelompokan Data Depresi Per Kategori</h4>
                     </div>
 
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-md-12">
                         <div class="card card-chart">
-                          <img src="data:image/png;base64,{{graphic_umur_tingkatdepresi|safe}}" class="img-fluid">
-                          <div class="card-body">
+                          <div class="card-header card-header-danger">
                             <h4 class="card-title">Pengelompokan Data Umur dengan Tingkat Depresi</h4>
-                            <p class="card-category">
-                              <br>
-                              <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
-                              <br>
-                              (1) Tidak Depresi <br>
-                              (2) Depresi Ringan <br>
-                              (3) Depresi Sedang <br>
-                              (4) Depresi Berat
-                            </p>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <img src="data:image/png;base64,{{graphic_umur_tingkatdepresi|safe}}" class="img-fluid">
+                              </div>
+                              <div class="col-md-6">
+                                {{ df_umur | safe }}
+                                <!-- <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
+                                  <br>
+                                  (1) Tidak Depresi <br>
+                                  (2) Depresi Ringan <br>
+                                  (3) Depresi Sedang <br>
+                                  (4) Depresi Berat
+                                </p> -->
+                              </div>
+                            </div>
                           </div>
                           <div class="card-footer">
                             <div class="stats">
@@ -139,24 +148,29 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-12">
                         <div class="card card-chart">
-                          <img src="data:image/png;base64,{{graphic_jeniskelamin_tingkatdepresi|safe}}" class="img-fluid">
-                          <div class="card-body">
+                          <div class="card-header card-header-danger">
                             <h4 class="card-title">Pengelompokan Data Jenis Kelamin dengan Tingkat Depresi</h4>
-                            <p class="card-category">
-                              <br>
-                              <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
-                              <br>
-                              (1) Tidak Depresi <br>
-                              (2) Depresi Ringan <br>
-                              (3) Depresi Sedang <br>
-                              (4) Depresi Berat <br><br>
-                              <span class="text-warning"> Keterangan Kode Jenis Kelamin: </span>
-                              <br>
-                              (1) Laki-laki <br>
-                              (2) Perempuan
-                            </p>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <img src="data:image/png;base64,{{graphic_jeniskelamin_tingkatdepresi|safe}}" class="img-fluid">
+                              </div>
+                              <div class="col-md-6">
+                                {{ df_jeniskelamin | safe }}
+                                <!-- <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
+                                  <br>
+                                  (1) Tidak Depresi <br>
+                                  (2) Depresi Ringan <br>
+                                  (3) Depresi Sedang <br>
+                                  (4) Depresi Berat
+                                </p> -->
+                              </div>
+                            </div>
                           </div>
                           <div class="card-footer">
                             <div class="stats">
@@ -167,26 +181,35 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-12">
                         <div class="card card-chart">
-                          <img src="data:image/png;base64,{{graphic_statuspekerjaan_tingkatdepresi|safe}}" class="img-fluid">
-                          <div class="card-body">
+                          <div class="card-header card-header-danger">
                             <h4 class="card-title">Pengelompokan Data Status Pekerjaan dengan Tingkat Depresi</h4>
-                            <p class="card-category">
-                              <br>
-                              <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
-                              <br>
-                              (1) Tidak Depresi <br>
-                              (2) Depresi Ringan <br>
-                              (3) Depresi Sedang <br>
-                              (4) Depresi Berat <br><br>
-                              <span class="text-warning"> Keterangan Kode Status Pekerjaan: </span>
-                              <br>
-                              (1) Kerja <br>
-                              (2) Mahasiswa <br>
-                              (3) Mahasiswa dan Kerja <br>
-                              (4) Tidak Kerja
-                            </p>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <img src="data:image/png;base64,{{graphic_statuspekerjaan_tingkatdepresi|safe}}" class="img-fluid">
+                              </div>
+                              <div class="col-md-6">
+                                {{ df_statuspekerjaan | safe }}
+                                <!-- <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Kode Tingkat Depresi: </span>
+                                  <br>
+                                  (1) Tidak Depresi <br>
+                                  (2) Depresi Ringan <br>
+                                  (3) Depresi Sedang <br>
+                                  (4) Depresi Berat <br><br>
+                                  <span class="text-warning"> Keterangan Kode Status Pekerjaan: </span>
+                                  <br>
+                                  (1) Kerja <br>
+                                  (2) Mahasiswa <br>
+                                  (3) Mahasiswa dan Kerja <br>
+                                  (4) Tidak Kerja
+                                </p> -->
+                              </div>
+                            </div>
                           </div>
                           <div class="card-footer">
                             <div class="stats">
@@ -203,10 +226,20 @@
                 <div class="col-md-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                      <h4 class="card-title">Tabel Pengelompokan Data Depresi</h4>
+                      <h4 class="card-title">Pengelompokan Data Depresi</h4>
                     </div>
                     <div class="card-body">
-                          {{ df | safe }}
+                      <div class="row">
+                          <div class="col-md-8">
+                            <h4 class="card-title">Grafik Pengelompokan Data Depresi</h4>
+                            <img src="data:image/png;base64,{{graphic_all|safe}}" class="img-fluid">
+                          </div>
+                          <br>
+                          <div class="col-md-12">
+                            <h4 class="card-title">Tabel Pengelompokan Data Depresi</h4>
+                            {{ df | safe }}
+                          </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -220,11 +253,49 @@
                       <div class="row">
                         <div class="col-lg-6 col-md-12">
                           <div class="card card-chart">
-                            <div class="card-header card-header-danger">
+                            <div class="card-header card-header-success">
+                              <h4 class="card-title">Data Umur dengan Jumlah Pengguna</h4>
+                            </div>
+                            <div class="card-body">
+                              <img src="data:image/png;base64,{{graphic_umur_bar|safe}}" class="img-fluid">
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                          <div class="card card-chart">
+                            <div class="card-header card-header-success">
+                              <h4 class="card-title">Data Jenis Kelamin dengan Jumlah Pengguna</h4>
+                            </div>
+                            <div class="card-body">
+                              <img src="data:image/png;base64,{{graphic_jeniskelamin_bar|safe}}" class="img-fluid">
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                          <div class="card card-chart">
+                            <div class="card-header card-header-success">
+                              <h4 class="card-title">Data Status Pekerjaan dengan Jumlah Pengguna</h4>
+                            </div>
+                            <div class="card-body">
+                              <img src="data:image/png;base64,{{graphic_statuspekerjaan_bar|safe}}" class="img-fluid">
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                          <div class="card card-chart">
+                            <div class="card-header card-header-success">
                               <h4 class="card-title">Data Tingkat Depresi dengan Jumlah Depresi</h4>
                             </div>
                             <div class="card-body">
-                              <img src="data:image/png;base64,{{graphic1|safe}}" class="img-fluid">
+                              <img src="data:image/png;base64,{{graphic_tingkatdepresi_bar|safe}}" class="img-fluid">
                             </div>
                             <div class="card-footer">
                             </div>
@@ -238,13 +309,58 @@
                 <div class="col-md-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                      <h4 class="card-title">Diagram Donat: Jumlah Depresi dengan Jenis Depresi</h4>
+                      <h4 class="card-title">Diagram Donat dari Data Depresi</h4>
                     </div>
-                    <div class="card-body">
-                      <img src="data:image/png;base64,{{graphic2|safe}}" class="img-fluid">
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <div class="card card-chart">
+                          <div class="card-header card-header-warning">
+                            <h4 class="card-title">Data Umur dengan Jumlah Pengguna</h4>
+                          </div>
+                          <div class="card-body">
+                            <img src="data:image/png;base64,{{graphic_umur_pie|safe}}" class="img-fluid">
+                          </div>
+                          <div class="card-footer">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-12">
+                        <div class="card card-chart">
+                          <div class="card-header card-header-warning">
+                            <h4 class="card-title">Data Jenis Kelamin dengan Jumlah Pengguna</h4>
+                          </div>
+                          <div class="card-body">
+                            <img src="data:image/png;base64,{{graphic_jeniskelamin_pie|safe}}" class="img-fluid">
+                          </div>
+                          <div class="card-footer">
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="card-footer">
-                      <div class="stats">
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <div class="card card-chart">
+                          <div class="card-header card-header-warning">
+                            <h4 class="card-title">Data Status Pekerjaan dengan Jumlah Pengguna</h4>
+                          </div>
+                          <div class="card-body">
+                            <img src="data:image/png;base64,{{graphic_statuspekerjaan_pie|safe}}" class="img-fluid">
+                          </div>
+                          <div class="card-footer">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-12">
+                        <div class="card card-chart">
+                          <div class="card-header card-header-warning">
+                            <h4 class="card-title">Data Tingkat Depresi dengan Jumlah Depresi</h4>
+                          </div>
+                          <div class="card-body">
+                            <img src="data:image/png;base64,{{graphic_tingkatdepresi_pie|safe}}" class="img-fluid">
+                          </div>
+                          <div class="card-footer">
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -25,7 +25,7 @@ df['Jenis Kelamin'] = df_jenkel[['Jenis Kelamin']]
 
 pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan')
 df_pekerjaan = pd.DataFrame(pekerjaan)
-mapping = {'Kerja': 1, 'Mahasiswa': 2, 'Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
+mapping = {'Kerja': 1, 'Pelajar/Mahasiswa': 2, 'Pelajar/Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
 df_pekerjaan['Status Pekerjaan'] = df_pekerjaan.replace({'pengguna_id__pekerjaan': mapping})
 df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
 df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
@@ -36,28 +36,10 @@ df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
 df_tingkatdepresi.columns = ['Tingkat Depresi']
 df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
 
-# change to array
-# x_array = np.array(inisial_df)
-
-# scaler = MinMaxScaler()
-# features_normal = scaler.fit_transform(x_array)
-# selected_df['initial'] = pd.DataFrame(np.array(x_scaled))
 
 scaler = preprocessing.MinMaxScaler()
 features_normal = scaler.fit_transform(df)
 
-# inertia = []
-# K = range(1,10)
-# for k in K:
-#     kmeanModel = KMeans(n_clusters=k).fit(features_normal)
-#     kmeanModel.fit(features_normal)
-#     inertia.append(kmeanModel.inertia_)
-
-# # Plot the elbow
-# plt.plot(K, inertia, 'bx-')
-# plt.xlabel('k')
-# plt.ylabel('Inertia')
-# plt.show()
 
 scoreDBI = [None] * 10
 for i in range(2, 10):
@@ -74,21 +56,27 @@ get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
 # plt.ylabel('Inertia')
 # plt.show()
 
-# kmeans = KMeans(n_clusters=4).fit(features_normal)
 kmeans = KMeans(n_clusters=get_best_cluster).fit(features_normal)
 
 labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
 labeled = pd.concat((df,labels),axis=1)
 labeled = labeled.rename({0:'labels'},axis=1)
 
-mapping = {1: '(1) Laki-laki', 2: '(2) Perempuan'}
+mapping = {1: 'Laki-laki (1)', 2: 'Perempuan (2)'}
 labeled = labeled.replace({'Jenis Kelamin': mapping}) 
 
-mapping = {1: '(1) Kerja', 2: '(2) Mahasiswa', 3: '(3) Mahasiswa dan Kerja', 4: '(4) Tidak Kerja'}
+mapping = {1: 'Kerja (1)', 2: 'Pelajar/Mahasiswa (2)', 3: 'Pelajar/Mahasiswa dan Kerja (3)', 4: 'Tidak Kerja (4)'}
 labeled = labeled.replace({'Status Pekerjaan': mapping})
 
-mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
+mapping = {1: 'Tidak Depresi (1)', 2: 'Depresi Ringan (2)', 3: 'Depresi Sedang (3)', 4: 'Depresi Berat (4)'}
 labeled = labeled.replace({'Tingkat Depresi': mapping})
+
+labeled.columns = ['Umur', 'Jenis Kelamin (Kode)', 'Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']
+labeled.index = range(1, labeled.shape[0] + 1)
+
+umur_labeled = labeled[['Umur', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']]
+jeniskelamin_labeled = labeled[['Jenis Kelamin (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
+statuspekerjaan_labeled = labeled[['Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
 
 sns.lmplot(x='Umur',y='Tingkat Depresi',data=labeled,hue='labels',fit_reg=False)
 plt.grid()

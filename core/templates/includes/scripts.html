@@ -46,6 +46,11 @@
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
   <script type="text/javascript">
     $(document).ready( function () {
-      $('#table_id').DataTable();
+      $('table.display').DataTable(
+        {
+          pageLength : 5,
+          lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']]
+        }
+      );
     } );
   </script>

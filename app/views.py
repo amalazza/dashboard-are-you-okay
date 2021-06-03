@@ -13,6 +13,7 @@ from django.template import loader
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django import template
 from django.urls import reverse
+from matplotlib.legend import Legend
 
 from rest_framework.response import Response
 from rest_framework import generics
@@ -79,8 +80,8 @@ def index(request):
     buffer.seek(0)
     image_png = buffer.getvalue()
     buffer.close()
-    graphic1 = base64.b64encode(image_png)
-    graphic1 = graphic1.decode('utf-8')
+    graphic_tingkatdepresi_bar = base64.b64encode(image_png)
+    graphic_tingkatdepresi_bar = graphic_tingkatdepresi_bar.decode('utf-8')
     pylab.close()
 
     plt.pie(query_df_bar['bar_depresi'],labels=query_df_bar['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
@@ -90,8 +91,89 @@ def index(request):
     buffer.seek(0)
     image_png = buffer.getvalue()
     buffer.close()
-    graphic2 = base64.b64encode(image_png)
-    graphic2 = graphic2.decode('utf-8')
+    graphic_tingkatdepresi_pie = base64.b64encode(image_png)
+    graphic_tingkatdepresi_pie = graphic_tingkatdepresi_pie.decode('utf-8')
+    pylab.close()
+
+
+    bar_umur = Pengguna.objects.values('umur').annotate(bar_umur=Count('id'))
+    query_df_bar = pd.DataFrame(bar_umur)
+    plt.bar(query_df_bar['umur'], query_df_bar['bar_umur']) 
+    plt.xlabel('Umur Pengguna')
+    plt.ylabel('Jumlah Pengguna')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_umur_bar = base64.b64encode(image_png)
+    graphic_umur_bar = graphic_umur_bar.decode('utf-8')
+    pylab.close()
+
+    plt.pie(query_df_bar['bar_umur'],labels=query_df_bar['umur'],autopct='%1.2f%%')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_umur_pie = base64.b64encode(image_png)
+    graphic_umur_pie = graphic_umur_pie.decode('utf-8')
+    pylab.close()
+
+
+    bar_jeniskelamin = Pengguna.objects.values('jenis_kelamin').annotate(bar_jeniskelamin=Count('id'))
+    query_df_bar = pd.DataFrame(bar_jeniskelamin)
+    plt.bar(query_df_bar['jenis_kelamin'], query_df_bar['bar_jeniskelamin']) 
+    plt.xlabel('Jenis Kelamin Pengguna')
+    plt.ylabel('Jumlah Pengguna')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_jeniskelamin_bar = base64.b64encode(image_png)
+    graphic_jeniskelamin_bar = graphic_jeniskelamin_bar.decode('utf-8')
+    pylab.close()
+
+    plt.pie(query_df_bar['bar_jeniskelamin'],labels=query_df_bar['jenis_kelamin'],autopct='%1.2f%%')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_jeniskelamin_pie = base64.b64encode(image_png)
+    graphic_jeniskelamin_pie = graphic_jeniskelamin_pie.decode('utf-8')
+    pylab.close()
+
+
+    bar_statuspekerjaan = Pengguna.objects.values('pekerjaan').annotate(bar_statuspekerjaan=Count('id'))
+    query_df_bar = pd.DataFrame(bar_statuspekerjaan)
+    plt.bar(query_df_bar['pekerjaan'], query_df_bar['bar_statuspekerjaan']) 
+    plt.xlabel('Status Pekerjaan Pengguna')
+    plt.ylabel('Jumlah Pengguna')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_statuspekerjaan_bar = base64.b64encode(image_png)
+    graphic_statuspekerjaan_bar = graphic_statuspekerjaan_bar.decode('utf-8')
+    pylab.close()
+
+    plt.pie(query_df_bar['bar_statuspekerjaan'],labels=query_df_bar['pekerjaan'],autopct='%1.2f%%')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_statuspekerjaan_pie = base64.b64encode(image_png)
+    graphic_statuspekerjaan_pie = graphic_statuspekerjaan_pie.decode('utf-8')
     pylab.close()
 
 
@@ -184,6 +266,19 @@ def index(request):
     graphic_statuspekerjaan_tingkatdepresi = graphic_statuspekerjaan_tingkatdepresi.decode('utf-8')
     pylab.close()
 
+    sns.pairplot(labeled,hue='labels')
+    plt.grid()
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_all = base64.b64encode(image_png)
+    graphic_all = graphic_all.decode('utf-8')
+    pylab.close()
+
+
     mapping = {1: 'Laki-laki (1)', 2: 'Perempuan (2)'}
     labeled = labeled.replace({'Jenis Kelamin': mapping}) 
 
@@ -195,20 +290,31 @@ def index(request):
 
     labeled.columns = ['Umur', 'Jenis Kelamin (Kode)', 'Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']
     labeled.index = range(1, labeled.shape[0] + 1) 
-    # dfStyler = labeled.style.set_properties(**{'text-align': 'right'})
-    # dfStyler.set_table_styles([dict(selector='th', props=[('text-align', 'right')])])
-    # dfStyler.render()
+
+    umur_labeled = labeled[['Umur', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']]
+    jeniskelamin_labeled = labeled[['Jenis Kelamin (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
+    statuspekerjaan_labeled = labeled[['Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
 
 
     context = {
         'title': "Applied K-Means",
         'k': get_best_cluster,
+        'df_umur': umur_labeled.to_html(classes = 'table display text-right" id = "table_id'),
+        'df_jeniskelamin': jeniskelamin_labeled.to_html(classes = 'table display text-right" id = "table_id'),
+        'df_statuspekerjaan': statuspekerjaan_labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'df': labeled.to_html(classes = 'table display text-right" id = "table_id'),
-        'graphic1': graphic1,
-        'graphic2': graphic2,
+        'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar,
+        'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie,
+        'graphic_umur_bar': graphic_umur_bar,
+        'graphic_umur_pie': graphic_umur_pie,
+        'graphic_jeniskelamin_bar': graphic_jeniskelamin_bar,
+        'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie,
+        'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar,
+        'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie,
         'graphic_umur_tingkatdepresi': graphic_umur_tingkatdepresi,
         'graphic_jeniskelamin_tingkatdepresi': graphic_jeniskelamin_tingkatdepresi,
         'graphic_statuspekerjaan_tingkatdepresi': graphic_statuspekerjaan_tingkatdepresi,
+        'graphic_all': graphic_all,
         'obj_tidakdepresi': tidakdepresi,
         'obj_depresiringan': depresiringan,
         'obj_depresisedang': depresisedang,
