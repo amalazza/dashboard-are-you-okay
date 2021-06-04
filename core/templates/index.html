@@ -81,7 +81,7 @@
           <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
             <div class="nav-tabs-navigation">
               <div class="nav-tabs-wrapper">
-                <span class="nav-tabs-title">Visualisasi Data Depresi:</span>
+                <span class="nav-tabs-title">Visualisasi Data:</span>
                 <ul class="nav nav-tabs" data-tabs="tabs">
                   <li class="nav-item">
                     <a class="nav-link active" href="#sebaran" data-toggle="tab">
@@ -119,16 +119,42 @@
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-12">
-                                <h4 class="card-title">Grafik Pengelompokan Data Depresi Per Kategori</h4>
+                                <h4 class="card-title">Grafik Pengelompokan Data Depresi</h4>
+                                <br>
                               </div>
                               <div class="col-md-4">
                                 <img src="data:image/png;base64,{{graphic_umur_tingkatdepresi|safe}}" class="img-fluid">
+                                <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Inisial Tingkat Depresi: </span>
+                                  <br>
+                                  (1) Tidak Depresi <br>
+                                  (2) Depresi Ringan <br>
+                                  (3) Depresi Sedang <br>
+                                  (4) Depresi Berat
+                                </p>
                               </div>
                               <div class="col-md-4">
                                 <img src="data:image/png;base64,{{graphic_jeniskelamin_tingkatdepresi|safe}}" class="img-fluid">
+                                <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Inisial Jenis Kelamin: </span>
+                                  <br>
+                                  (1) Laki-laki <br>
+                                  (2) Perempuan 
+                                </p>
                               </div>
                               <div class="col-md-4">
                                 <img src="data:image/png;base64,{{graphic_statuspekerjaan_tingkatdepresi|safe}}" class="img-fluid">
+                                <p class="card-category">
+                                  <br>
+                                  <span class="text-primary"> Keterangan Inisial Status Pekerjaan: </span>
+                                  <br>
+                                  (1) Kerja <br>
+                                  (2) Mahasiswa <br>
+                                  (3) Mahasiswa dan Kerja <br>
+                                  (4) Tidak Kerja
+                                </p>
                               </div>
                             </div>
                             <hr>
@@ -155,7 +181,7 @@
                 <div class="col-md-12">
                     <div class="card card-chart">
                       <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                        <h4 class="card-title">Diagram Batang dari Data Depresi</h4>
+                        <h4 class="card-title">Diagram Batang dari Data Pengguna</h4>
                       </div>
                       <div class="row">
                         <div class="col-lg-6 col-md-12">
@@ -216,7 +242,7 @@
                 <div class="col-md-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                      <h4 class="card-title">Diagram Lingkaran dari Data Depresi</h4>
+                      <h4 class="card-title">Diagram Lingkaran dari Data Pengguna</h4>
                     </div>
                     <div class="row">
                       <div class="col-lg-6 col-md-12">
