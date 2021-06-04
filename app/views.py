@@ -224,7 +224,7 @@ def index(request):
     # plt.ylabel('Inertia')
     # plt.show()
 
-    kmeans = KMeans(n_clusters=get_best_cluster).fit(features_normal)
+    kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(features_normal)
 
     labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
     labeled = pd.concat((df,labels),axis=1)
@@ -288,12 +288,12 @@ def index(request):
     mapping = {1: 'Tidak Depresi (1)', 2: 'Depresi Ringan (2)', 3: 'Depresi Sedang (3)', 4: 'Depresi Berat (4)'}
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
-    labeled.columns = ['Umur', 'Jenis Kelamin (Kode)', 'Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']
+    labeled.columns = ['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']
     labeled.index = range(1, labeled.shape[0] + 1) 
 
-    umur_labeled = labeled[['Umur', 'Tingkat Depresi (Kode)', 'Clusters/ Labels']]
-    jeniskelamin_labeled = labeled[['Jenis Kelamin (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
-    statuspekerjaan_labeled = labeled[['Status Pekerjaan (Kode)', 'Tingkat Depresi (Kode)','Clusters/ Labels']]
+    umur_labeled = labeled[['Umur', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']]
+    jeniskelamin_labeled = labeled[['Jenis Kelamin (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
+    statuspekerjaan_labeled = labeled[['Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
 
 
     context = {
