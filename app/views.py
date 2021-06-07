@@ -209,8 +209,8 @@ def index(request):
     features_normal = scaler.fit_transform(df)
 
 
-    scoreDBI = [None] * 10
-    for i in range(2, 10):
+    scoreDBI = [None] * 7
+    for i in range(2, 7):
         kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
         DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
         scoreDBI[i] = DBI
@@ -307,6 +307,7 @@ def index(request):
 
     count = labeled.groupby(['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
     group3 = pd.DataFrame(count)
+    group3.index = range(1, group3.shape[0] + 1) 
     # group3= group3.sort_values(['Umur'],ascending=[True])  
     # group3= group3.sort_values(['Jenis Kelamin (Inisial)'],ascending=[True]) 
     # group3= group3.sort_values(['Status Pekerjaan (Inisial)'],ascending=[True]) 
