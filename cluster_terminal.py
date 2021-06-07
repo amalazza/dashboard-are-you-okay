@@ -56,9 +56,9 @@ get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
 # plt.ylabel('Inertia')
 # plt.show()
 
-kmeans = KMeans(n_clusters=get_best_cluster).fit(features_normal)
+kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(features_normal)
 
-labels = pd.DataFrame(kmeans.labels_) 
+labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
 labeled = pd.concat((df,labels),axis=1)
 labeled = labeled.rename({0:'labels'},axis=1)
 
@@ -68,7 +68,7 @@ labeled = labeled.replace({'Jenis Kelamin': mapping})
 mapping = {1: 'Kerja (1)', 2: 'Pelajar/Mahasiswa (2)', 3: 'Pelajar/Mahasiswa dan Kerja (3)', 4: 'Tidak Kerja (4)'}
 labeled = labeled.replace({'Status Pekerjaan': mapping})
 
-mapping = {1: 'Tidak Depresi (1)', 2: 'Depresi Ringan (2)', 3: 'Depresi Sedang (3)', 4: 'Depresi Berat (4)'}
+mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
 labeled = labeled.replace({'Tingkat Depresi': mapping})
 
 labeled.columns = ['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']
@@ -95,11 +95,29 @@ sns.pairplot(labeled,hue='labels')
 plt.grid()
 plt.show()
 
-labeled.to_csv (r'C:\Users\LENOVO\Documents\KULIAH\SEMESTER 8\Skripsi\label.csv', index = True, header=True)
+labeled.to_csv (r'C:\Users\LENOVO\Documents\KULIAH\SEMESTER 8\Skripsi\excel\label.csv', index = True, header=True)
 
 
 
+centroid = pd.DataFrame(kmeans.cluster_centers_)
+
+count = labeled.pivot_table(index=['Clusters/ Labels', 'Tingkat Depresi (Inisial)', 'Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)'], aggfunc='size').reset_index(name='counts')
+
+labeled.groupby(['Clusters/ Labels', 'Tingkat Depresi (Inisial)', 'Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)']).size().reset_index(name='counts')
+
+count = labeled.groupby(['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
+group3 = pd.DataFrame(count)
+group3= group3.sort_values(['Umur'],ascending=[True])  
+group3= group3.sort_values(['Jenis Kelamin (Inisial)'],ascending=[True]) 
+group3= group3.sort_values(['Status Pekerjaan (Inisial)'],ascending=[True]) 
+# group3= group3.sort_values(['Jumlah Data'],ascending=[False])  
+group3= group3.sort_values(['Tingkat Depresi (Inisial)'],ascending=[True])  
 
 
+nama = HasilDeteksi.objects.values('pengguna_id__nama')
+df_nama = pd.DataFrame(nama)
+df_nama.columns = ['Nama']
+labeled.insert(0, 'Nama', df_nama)
 
 
+df['Nama'] = df_nama[['Nama']]

@@ -111,7 +111,7 @@
                 <div class="col-md-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
-                      <h4 class="card-title">Pengelompokan Data Depresi</h4>
+                      <h4 class="card-title">Clustering Data Depresi</h4>
                     </div>
 
                     <div class="row">
@@ -119,7 +119,7 @@
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-12">
-                                <h4 class="card-title">Grafik Pengelompokan Data Depresi</h4>
+                                <h4 class="card-title">Grafik Clustering Data Depresi</h4>
                                 <br>
                               </div>
                               <div class="col-md-4">
@@ -160,7 +160,14 @@
                             <hr>
                             <div class="row">
                               <div class="col-md-12">
-                                <h4 class="card-title">Tabel Pengelompokan Data Depresi</h4>
+                                <h4 class="card-title">Tabel Per Kategori Clustering Data Depresi</h4>
+                                {{ df_group | safe }}
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h4 class="card-title">Tabel Clustering Data Depresi</h4>
                                 {{ df | safe }}
                               </div>
                             </div>

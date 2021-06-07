@@ -289,11 +289,30 @@ def index(request):
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
     labeled.columns = ['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']
+    
+    nama = HasilDeteksi.objects.values('pengguna_id__nama')
+    df_nama = pd.DataFrame(nama)
+    df_nama.columns = ['Nama']
+    labeled.insert(0, 'Nama', df_nama)
+    # idd = HasilDeteksi.objects.values('pengguna_id')
+    # df_id = pd.DataFrame(idd)
+    # df_id.columns = ['id']
+    # labeled.insert(0, 'id', df_id)
+    
     labeled.index = range(1, labeled.shape[0] + 1) 
 
     umur_labeled = labeled[['Umur', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']]
     jeniskelamin_labeled = labeled[['Jenis Kelamin (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
     statuspekerjaan_labeled = labeled[['Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
+
+    count = labeled.groupby(['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
+    group3 = pd.DataFrame(count)
+    # group3= group3.sort_values(['Umur'],ascending=[True])  
+    # group3= group3.sort_values(['Jenis Kelamin (Inisial)'],ascending=[True]) 
+    # group3= group3.sort_values(['Status Pekerjaan (Inisial)'],ascending=[True]) 
+    # group3= group3.sort_values(['Jumlah Data'],ascending=[False])  
+    # group3= group3.sort_values(['Tingkat Depresi (Inisial)'],ascending=[True])  
+
 
 
     context = {
@@ -303,6 +322,7 @@ def index(request):
         'df_jeniskelamin': jeniskelamin_labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'df_statuspekerjaan': statuspekerjaan_labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'df': labeled.to_html(classes = 'table display text-right" id = "table_id'),
+        'df_group': group3.to_html(classes = 'table display text-right" id = "table_id'),
         'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar,
         'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie,
         'graphic_umur_bar': graphic_umur_bar,
