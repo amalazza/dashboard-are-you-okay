@@ -279,16 +279,16 @@ def index(request):
     pylab.close()
 
 
-    mapping = {1: 'Laki-laki (1)', 2: 'Perempuan (2)'}
+    mapping = {1: '(1) Laki-laki', 2: '(2) Perempuan'}
     labeled = labeled.replace({'Jenis Kelamin': mapping}) 
 
-    mapping = {1: 'Kerja (1)', 2: 'Pelajar/Mahasiswa (2)', 3: 'Pelajar/Mahasiswa dan Kerja (3)', 4: 'Tidak Kerja (4)'}
+    mapping = {1: '(1) Kerja', 2: '(2) Pelajar/Mahasiswa', 3: '(3) Pelajar/Mahasiswa dan Kerja', 4: '(4) Tidak Kerja'}
     labeled = labeled.replace({'Status Pekerjaan': mapping})
 
-    mapping = {1: 'Tidak Depresi (1)', 2: 'Depresi Ringan (2)', 3: 'Depresi Sedang (3)', 4: 'Depresi Berat (4)'}
+    mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
-    labeled.columns = ['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']
+    labeled.columns = ['Umur', '(Inisial) Jenis Kelamin', '(Inisial) Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Clusters/ Labels']
     
     nama = HasilDeteksi.objects.values('pengguna_id__nama')
     df_nama = pd.DataFrame(nama)
@@ -301,11 +301,11 @@ def index(request):
     
     labeled.index = range(1, labeled.shape[0] + 1) 
 
-    umur_labeled = labeled[['Umur', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']]
-    jeniskelamin_labeled = labeled[['Jenis Kelamin (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
-    statuspekerjaan_labeled = labeled[['Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)','Clusters/ Labels']]
+    umur_labeled = labeled[['Umur', '(Inisial) Tingkat Depresi', 'Clusters/ Labels']]
+    jeniskelamin_labeled = labeled[['(Inisial) Jenis Kelamin', '(Inisial) Tingkat Depresi','Clusters/ Labels']]
+    statuspekerjaan_labeled = labeled[['(Inisial) Status Pekerjaan', '(Inisial) Tingkat Depresi','Clusters/ Labels']]
 
-    count = labeled.groupby(['Umur', 'Jenis Kelamin (Inisial)', 'Status Pekerjaan (Inisial)', 'Tingkat Depresi (Inisial)', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
+    count = labeled.groupby(['Umur', '(Inisial) Jenis Kelamin', '(Inisial) Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
     group3 = pd.DataFrame(count)
     group3.index = range(1, group3.shape[0] + 1) 
     # group3= group3.sort_values(['Umur'],ascending=[True])  
