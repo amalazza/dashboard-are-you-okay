@@ -62,11 +62,37 @@ class Penanganan(models.Model):
 
 class HistoryPertanyaanJawaban(models.Model):
     hasildeteksi = models.ForeignKey(HasilDeteksi, on_delete=models.CASCADE)
-    pertanyaan = models.ForeignKey(Pertanyaan, on_delete=models.CASCADE)
-    jawaban = models.ForeignKey(Jawaban, on_delete=models.CASCADE)
+    jawaban_1 = models.IntegerField(blank = False, null = False)
+    jawaban_2 = models.IntegerField(blank = False, null = False)
+    jawaban_3 = models.IntegerField(blank = False, null = False)
+    jawaban_4 = models.IntegerField(blank = False, null = False)
+    jawaban_5 = models.IntegerField(blank = False, null = False)
+    jawaban_6 = models.IntegerField(blank = False, null = False)
+    jawaban_7 = models.IntegerField(blank = False, null = False)
+    jawaban_8 = models.IntegerField(blank = False, null = False)
+    jawaban_9 = models.IntegerField(blank = False, null = False)
+    jawaban_10 = models.IntegerField(blank = False, null = False)
+    jawaban_11 = models.IntegerField(blank = False, null = False)
+    jawaban_12 = models.IntegerField(blank = False, null = False)
+    jawaban_13 = models.IntegerField(blank = False, null = False)
+    jawaban_14 = models.IntegerField(blank = False, null = False)
+    jawaban_15 = models.IntegerField(blank = False, null = False)
+    jawaban_16 = models.IntegerField(blank = False, null = False)
+    jawaban_17 = models.IntegerField(blank = False, null = False)
+    jawaban_18 = models.IntegerField(blank = False, null = False)
+    jawaban_19 = models.IntegerField(blank = False, null = False)
+    jawaban_20 = models.IntegerField(blank = False, null = False)
 
     def __str__(self):
-        return self.hasildeteksi
+        return str(self.hasildeteksi)
+
+# class HistoryPertanyaanJawaban(models.Model):
+#     hasildeteksi = models.ForeignKey(HasilDeteksi, on_delete=models.CASCADE)
+#     pertanyaan = models.ForeignKey(Pertanyaan, on_delete=models.CASCADE)
+#     jawaban = models.ForeignKey(Jawaban, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return str(self.hasildeteksi)
 
 # class Pencegahan(models.Model):
 #     judul = models.CharField(max_length=255, blank = False, null = False)
