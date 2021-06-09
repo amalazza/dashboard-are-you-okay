@@ -1061,7 +1061,7 @@ def apiOverviewHistoryPertanyaanJawaban(request):
 @api_view(['GET'])
 def showAllHistoryPertanyaanJawaban(request):
     historypertanyaanjawaban = HistoryPertanyaanJawaban.objects.all()
-    serializer = HistoryPertanyaanJawaban(historypertanyaanjawaban, many=True)
+    serializer = HistoryPertanyaanJawabanSerializer(historypertanyaanjawaban, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
