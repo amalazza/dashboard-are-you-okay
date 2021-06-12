@@ -304,3 +304,88 @@ for i in u_labels:
 plt.scatter(centroids[:,0] , centroids[:,1] , s = 180, color = 'k)
 plt.legend()
 plt.show()
+
+
+
+
+
+
+
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.cluster import KMeans
+#import sklearn.cluster.hierarchical as hclust
+from sklearn import preprocessing
+import seaborn as sns
+from app.models import *
+from sklearn.metrics import davies_bouldin_score
+from sklearn.decomposition import PCA
+
+
+
+umur = HasilDeteksi.objects.values('pengguna_id__umur')
+df_umur = pd.DataFrame(umur)
+df_umur.columns = ['Umur']
+df=pd.DataFrame(df_umur)
+
+
+jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin')
+df_jenkel = pd.DataFrame(jenkel)
+mapping = {'Laki-laki': 1, 'Perempuan': 2}
+df_jenkel['Jenis Kelamin'] = df_jenkel.replace({'pengguna_id__jenis_kelamin': mapping})
+df_jenkel.drop('pengguna_id__jenis_kelamin', inplace=True, axis=1)
+df['Jenis Kelamin'] = df_jenkel[['Jenis Kelamin']]
+
+
+pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan')
+df_pekerjaan = pd.DataFrame(pekerjaan)
+mapping = {'Kerja': 1, 'Pelajar/Mahasiswa': 2, 'Pelajar/Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
+df_pekerjaan['Status Pekerjaan'] = df_pekerjaan.replace({'pengguna_id__pekerjaan': mapping})
+df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
+df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
+
+
+tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id')
+df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+df_tingkatdepresi.columns = ['Tingkat Depresi']
+df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
+
+pca = PCA(4)
+ 
+#Transform the data
+
+scaler = preprocessing.MinMaxScaler()
+features_normal2 = scaler.fit_transform(df)
+features_normal = pca.fit_transform(features_normal2)
+
+
+
+scoreDBI = [None] * 8
+for i in range(2, 8):
+    kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
+    DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
+    scoreDBI[i] = DBI
+
+del scoreDBI[0:2]
+get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
+
+kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(features_normal)
+
+# label = kmeans.fit(features_normal2)
+label = kmeans.fit_predict(features_normal)
+
+
+#Getting the Centroids
+centroids = kmeans.cluster_centers_
+u_labels = np.unique(label)
+ 
+#plotting the results:
+ 
+for i in u_labels:
+    plt.scatter(features_normal2[label == i , 0] , features_normal2[label == i , 1] , label = i)
+
+plt.scatter(centroids[:,0] , centroids[:,1] , s = 180, color = 'k')
+plt.legend()
+plt.show()

@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %} Dashboard A {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -123,7 +123,7 @@
                                 <br>
                               </div>
                               <div class="col-md-4">
-                                <img src="data:image/png;base64,{{graphic_umur_tingkatdepresi|safe}}" class="img-fluid">
+                                <img src="data:image/png;base64,{{graphic_all|safe}}" class="img-fluid">
                                 <p class="card-category">
                                   <br>
                                   <span class="text-primary"> Keterangan Inisial Tingkat Depresi: </span>
@@ -134,7 +134,7 @@
                                   (4) Depresi Berat
                                 </p>
                               </div>
-                               <div class="col-md-4">
+                              <!--  <div class="col-md-4">
                                 <img src="data:image/png;base64,{{graphic_jeniskelamin_tingkatdepresi|safe}}" class="img-fluid">
                                 <p class="card-category">
                                   <br>
@@ -155,16 +155,16 @@
                                   (3) Mahasiswa dan Kerja <br>
                                   (4) Tidak Kerja
                                 </p>
-                              </div>
+                              </div> -->
                             </div>
                             <hr>
-                            <div class="row">
+                            <!-- <div class="row">
                               <div class="col-md-12">
                                 <h4 class="card-title">Tabel Per Kategori Clustering Data Depresi</h4>
                                 {{ df_group | safe }}
                               </div>
                             </div>
-                            <hr>
+                            <hr> -->
                             <div class="row">
                               <div class="col-md-12">
                                 <h4 class="card-title">Tabel Clustering Data Depresi</h4>
