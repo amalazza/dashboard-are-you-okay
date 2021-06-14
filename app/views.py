@@ -64,7 +64,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # CLUSTERING DATA
 
 @login_required(login_url="/login/")
-def index(request):
+def indexc(request):
     tingdep = HasilDeteksi.objects.values('tingkatdepresi', 'pengguna').order_by('pengguna','-createdAt').distinct('pengguna')
     df_tingdep = pd.DataFrame(tingdep)
     count = df_tingdep.groupby(['tingkatdepresi']).size().reset_index(name='Jumlah')
@@ -353,9 +353,9 @@ def index(request):
         'obj_depresisedang': depresisedang,
         'obj_depresiberat': depresiberat,
     }
-    context['segment'] = 'index'
+    context['segment'] = 'indexc'
 
-    html_template = loader.get_template( 'index.html' )
+    html_template = loader.get_template( 'indexc.html' )
     return HttpResponse(html_template.render(context, request))
 
 
@@ -935,7 +935,7 @@ def indexb(request):
 # CLUSTERING DATA
 
 @login_required(login_url="/login/")
-def indexc(request):
+def index(request):
     tingdep = HasilDeteksi.objects.values('tingkatdepresi', 'pengguna').order_by('pengguna','-createdAt').distinct('pengguna')
     df_tingdep = pd.DataFrame(tingdep)
     count = df_tingdep.groupby(['tingkatdepresi']).size().reset_index(name='Jumlah')
@@ -1081,24 +1081,32 @@ def indexc(request):
     df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
     df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
 
-
-    tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id').order_by('pengguna','-createdAt').distinct('pengguna')
+    
+    tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').order_by('pengguna','-createdAt').distinct('pengguna')
     df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
-    df_tingkatdepresi.columns = ['Tingkat Depresi']
+    mapping = {'Tidak Depresi': 1, 'Depresi Ringan': 2, 'Depresi Sedang': 3, 'Depresi Berat': 4}
+    df_tingkatdepresi['Tingkat Depresi'] = df_tingkatdepresi.replace({'tingkatdepresi_id__nama_depresi': mapping})
+    df_tingkatdepresi.drop('tingkatdepresi_id__nama_depresi', inplace=True, axis=1)
     df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
 
 
-    pca = PCA(4)
+    # tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id').order_by('pengguna','-createdAt').distinct('pengguna')
+    # df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+    # df_tingkatdepresi.columns = ['Tingkat Depresi']
+    # df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
  
     #Transform the data
 
     scaler = preprocessing.MinMaxScaler()
     features_normal2 = scaler.fit_transform(df)
+
+    pca = PCA(2)
     features_normal = pca.fit_transform(features_normal2)
 
 
-    scoreDBI = [None] * 7
-    for i in range(2, 7):
+    scoreDBI = [None] * 10
+    for i in range(2, 10):
         kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
         DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
         scoreDBI[i] = DBI
@@ -1146,7 +1154,7 @@ def indexc(request):
     mapping = {1: 'Tidak Depresi', 2: 'Depresi Ringan', 3: 'Depresi Sedang', 4: 'Depresi Berat'}
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
-    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Clusters/ Labels']
+    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Klaster/ Kelompok']
     
     nama = HasilDeteksi.objects.values('pengguna_id__nama').order_by('pengguna','-createdAt').distinct('pengguna')
     df_nama = pd.DataFrame(nama)
@@ -1159,7 +1167,7 @@ def indexc(request):
     
     labeled.index = range(1, labeled.shape[0] + 1) 
 
-    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Clusters/ Labels']).size().reset_index(name='Jumlah Data')
+    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
     group3 = pd.DataFrame(count)
     group3.index = range(1, group3.shape[0] + 1) 
     # group3= group3.sort_values(['Umur'],ascending=[True])  
@@ -1195,9 +1203,9 @@ def indexc(request):
         'obj_depresisedang': depresisedang,
         'obj_depresiberat': depresiberat,
     }
-    context['segment'] = 'indexc'
+    context['segment'] = 'index'
 
-    html_template = loader.get_template( 'indexc.html' )
+    html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
 
 

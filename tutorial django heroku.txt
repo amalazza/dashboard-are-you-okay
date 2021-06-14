@@ -25,3 +25,10 @@ git push heroku master
 
 
 pip freeze > requirements.txt 
+
+
+
+
+
+
+env\Scripts\activate
