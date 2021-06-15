@@ -1128,6 +1128,8 @@ def index(request):
     
     for i in u_labels:
         plt.scatter(features_normal[label == i , 0] , features_normal[label == i , 1] , label = i)
+        plt.xlabel('Principal Component 1')
+        plt.ylabel('Principal Component 2')
 
     plt.scatter(centroids[:,0] , centroids[:,1], s=10, marker=('x'), color='black')
     plt.legend()
@@ -1151,10 +1153,10 @@ def index(request):
     mapping = {1: 'Kerja', 2: 'Pelajar/Mahasiswa', 3: 'Pelajar/Mahasiswa dan Kerja', 4: 'Tidak Kerja'}
     labeled = labeled.replace({'Status Pekerjaan': mapping})
 
-    mapping = {1: 'Tidak Depresi', 2: 'Depresi Ringan', 3: 'Depresi Sedang', 4: 'Depresi Berat'}
+    mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
-    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Klaster/ Kelompok']
+    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Klaster/ Kelompok']
     
     nama = HasilDeteksi.objects.values('pengguna_id__nama').order_by('pengguna','-createdAt').distinct('pengguna')
     df_nama = pd.DataFrame(nama)
@@ -1167,7 +1169,7 @@ def index(request):
     
     labeled.index = range(1, labeled.shape[0] + 1) 
 
-    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
+    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
     group3 = pd.DataFrame(count)
     group3.index = range(1, group3.shape[0] + 1) 
     # group3= group3.sort_values(['Umur'],ascending=[True])  
@@ -1175,6 +1177,32 @@ def index(request):
     # group3= group3.sort_values(['Status Pekerjaan (Inisial)'],ascending=[True]) 
     # group3= group3.sort_values(['Jumlah Data'],ascending=[False])  
     # group3= group3.sort_values(['Tingkat Depresi (Inisial)'],ascending=[True])  
+
+
+    df_klaster = labeled.groupby(['Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
+    plt.bar(df_klaster['Klaster/ Kelompok'], df_klaster['Jumlah Data']) 
+    plt.xlabel('Klaster')
+    plt.ylabel('Jumlah Data')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_klaster_bar = base64.b64encode(image_png)
+    graphic_klaster_bar = graphic_klaster_bar.decode('utf-8')
+    pylab.close()
+
+    plt.pie(df_klaster['Jumlah Data'],labels=df_klaster['Klaster/ Kelompok'],autopct='%1.2f%%')
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    graphic_klaster_pie = base64.b64encode(image_png)
+    graphic_klaster_pie = graphic_klaster_pie.decode('utf-8')
+    pylab.close()
 
 
 
@@ -1194,6 +1222,8 @@ def index(request):
         'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie,
         'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar,
         'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie,
+        'graphic_klaster_bar': graphic_klaster_bar,
+        'graphic_klaster_pie': graphic_klaster_pie,
         # 'graphic_umur_tingkatdepresi': graphic_umur_tingkatdepresi,
         # 'graphic_jeniskelamin_tingkatdepresi': graphic_jeniskelamin_tingkatdepresi,
         # 'graphic_statuspekerjaan_tingkatdepresi': graphic_statuspekerjaan_tingkatdepresi,
