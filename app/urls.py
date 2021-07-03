@@ -17,6 +17,11 @@ urlpatterns = [
 
     path('indexc', views.indexc, name='homec'),
 
+
+    path('export-data-sebelum-clustering', views.exportdatasebelumclustering, name='export-data-sebelum-clustering'),
+
+    path('export-data-hasil-clustering', views.exportdatahasilclustering, name='export-data-hasil-clustering'),
+
     # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),
 

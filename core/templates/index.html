@@ -113,17 +113,24 @@
                     <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
                       <h4 class="card-title">Clustering Data Depresi</h4>
                     </div>
-
                     <div class="row">
                       <div class="col-md-12">
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-12">
-                                <h4 class="card-title">Grafik Clustering Data Depresi</h4>
+                                <h4 class="card-title">Hasil Clustering Data Depresi</h4>
                                 <br>
                               </div>
-                              <div class="col-md-8">
+                              <div class="col-md-5">
                                 <img src="data:image/png;base64,{{graphic_all|safe}}" class="img-fluid">
+                                <br>
+                                <center>
+                                  <div class="stats">
+                                    Menghasilkan&nbsp;
+                                    <span class="text-primary"> {{ k }} </span> 
+                                    &nbsp;Klaster
+                                  </div>
+                                </center>
                                 <!-- <p class="card-category">
                                   <br>
                                   <span class="text-primary"> Keterangan Inisial Tingkat Depresi: </span>
@@ -134,49 +141,62 @@
                                   (4) Depresi Berat
                                 </p> -->
                               </div>
-                              <!--  <div class="col-md-4">
-                                <img src="data:image/png;base64,{{graphic_jeniskelamin_tingkatdepresi|safe}}" class="img-fluid">
-                                <p class="card-category">
-                                  <br>
-                                  <span class="text-primary"> Keterangan Inisial Jenis Kelamin: </span>
-                                  <br>
-                                  (1) Laki-laki <br>
-                                  (2) Perempuan 
-                                </p>
-                              </div>
-                              <div class="col-md-4">
-                                <img src="data:image/png;base64,{{graphic_statuspekerjaan_tingkatdepresi|safe}}" class="img-fluid">
-                                <p class="card-category">
-                                  <br>
-                                  <span class="text-primary"> Keterangan Inisial Status Pekerjaan: </span>
-                                  <br>
-                                  (1) Kerja <br>
-                                  (2) Mahasiswa <br>
-                                  (3) Mahasiswa dan Kerja <br>
-                                  (4) Tidak Kerja
-                                </p>
-                              </div> -->
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <div class="col-md-12">
-                                <h4 class="card-title">Tabel Per Kategori Clustering Data Depresi</h4>
+                               <div class="col-md-7">
                                 {{ df_group | safe }}
                               </div>
                             </div>
                             <hr>
                             <div class="row">
-                              <div class="col-md-12">
+                              <div class="col-md-5">
                                 <h4 class="card-title">Tabel Clustering Data Depresi</h4>
+                              </div>
+                              <div class="col-md-7">
+                                <!-- Single button -->
+                                <div class="btn-group pull-right">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Export Data Depresi Per Periode <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="{% url 'app:export-data-sebelum-clustering' %}">Data Depresi Sebelum Clustering</a></li>
+                                    <li><a href="{% url 'app:export-data-hasil-clustering' %}">Data Depresi Hasil Clustering</a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
                                 {{ df | safe }}
                               </div>
                             </div>
+                            <!-- <hr>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h4 class="card-title">Export Data Depresi Per Periode</h4>
+                                <form method="POST">
+                                  {% csrf_token %}
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <label class="bmd-label-floating">Data Depresi Sebelum Clustering&nbsp;:</label>
+                                      <a href="{% url 'app:export-data-sebelum-clustering' %}" class="btn btn-primary">Export</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                      <label class="bmd-label-floating">Data Depresi Hasil Clustering&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                      <a href="{% url 'app:export-data-hasil-clustering' %}" class="btn btn-primary">Export</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div> -->
+                            
                           </div>
                           <div class="card-footer">
                             <div class="stats">
-                              Menghasilkan&nbsp;
-                              <span class="text-success"> {{ k }} </span> 
-                              &nbsp;Cluster/ Label
+                              <span class="text-danger"> *Note&nbsp;: </span> 
+                              &nbsp;&nbsp;Clustering dapat dilakukan dengan minimal jumlah data depresi = 10
                             </div>
                           </div>
                       </div>

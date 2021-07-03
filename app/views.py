@@ -1060,6 +1060,8 @@ def index(request):
     pylab.close()
 
 
+    # CLUSTERING SEMUANYA
+
     umur = HasilDeteksi.objects.values('pengguna_id__umur').order_by('pengguna','-createdAt').distinct('pengguna')
     df_umur = pd.DataFrame(umur)
     df_umur.columns = ['Umur']
@@ -1131,7 +1133,7 @@ def index(request):
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
 
-    plt.scatter(centroids[:,0] , centroids[:,1], s=10, marker=('x'), color='black')
+    # plt.scatter(centroids[:,0] , centroids[:,1], s=10, marker=('x'), color='black')
     plt.legend()
     plt.tight_layout()
     buffer = BytesIO()
@@ -1156,7 +1158,7 @@ def index(request):
     mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
     labeled = labeled.replace({'Tingkat Depresi': mapping})
 
-    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Klaster/ Kelompok']
+    labeled.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']
     
     nama = HasilDeteksi.objects.values('pengguna_id__nama').order_by('pengguna','-createdAt').distinct('pengguna')
     df_nama = pd.DataFrame(nama)
@@ -1169,7 +1171,7 @@ def index(request):
     
     labeled.index = range(1, labeled.shape[0] + 1) 
 
-    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Inisial) Tingkat Depresi', 'Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
+    count = labeled.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']).size().reset_index(name='Jumlah')
     group3 = pd.DataFrame(count)
     group3.index = range(1, group3.shape[0] + 1) 
     # group3= group3.sort_values(['Umur'],ascending=[True])  
@@ -1179,10 +1181,10 @@ def index(request):
     # group3= group3.sort_values(['Tingkat Depresi (Inisial)'],ascending=[True])  
 
 
-    df_klaster = labeled.groupby(['Klaster/ Kelompok']).size().reset_index(name='Jumlah Data')
-    plt.bar(df_klaster['Klaster/ Kelompok'], df_klaster['Jumlah Data']) 
+    df_klaster = labeled.groupby(['Klaster']).size().reset_index(name='Jumlah')
+    plt.bar(df_klaster['Klaster'], df_klaster['Jumlah']) 
     plt.xlabel('Klaster')
-    plt.ylabel('Jumlah Data')
+    plt.ylabel('Jumlah')
     plt.tight_layout()
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -1193,7 +1195,7 @@ def index(request):
     graphic_klaster_bar = graphic_klaster_bar.decode('utf-8')
     pylab.close()
 
-    plt.pie(df_klaster['Jumlah Data'],labels=df_klaster['Klaster/ Kelompok'],autopct='%1.2f%%')
+    plt.pie(df_klaster['Jumlah'],labels=df_klaster['Klaster'],autopct='%1.2f%%')
     plt.tight_layout()
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -1206,6 +1208,8 @@ def index(request):
 
 
 
+
+
     context = {
         'title': "Applied K-Means",
         'k': get_best_cluster,
@@ -1214,6 +1218,8 @@ def index(request):
         # 'df_statuspekerjaan': statuspekerjaan_labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'df': labeled.to_html(classes = 'table display text-right" id = "table_id'),
         'df_group': group3.to_html(classes = 'table display text-right" id = "table_id'),
+        # 'df_export': labeled_export.to_html(classes = 'table display text-right" id = "table_id'),
+        # 'df_group_export': group3_export.to_html(classes = 'table display text-right" id = "table_id'),
         'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar,
         'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie,
         'graphic_umur_bar': graphic_umur_bar,
@@ -1228,17 +1234,365 @@ def index(request):
         # 'graphic_jeniskelamin_tingkatdepresi': graphic_jeniskelamin_tingkatdepresi,
         # 'graphic_statuspekerjaan_tingkatdepresi': graphic_statuspekerjaan_tingkatdepresi,
         'graphic_all': graphic_all,
+        # 'graphic_all_export': graphic_all_export,
         'obj_tidakdepresi': tidakdepresi,
         'obj_depresiringan': depresiringan,
         'obj_depresisedang': depresisedang,
         'obj_depresiberat': depresiberat,
     }
+
+
     context['segment'] = 'index'
 
     html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
 
 
+
+
+
+
+
+
+# EXPORT DATA CLUSTERING PER PERIODE
+@login_required(login_url="/login/")
+def exportdatasebelumclustering(request):
+    if request.method=='POST': 
+        # .filter(createdAt__range=[fromdate, todate])
+        fromdate=request.POST.get("fromdate")
+        todate=request.POST.get("todate")
+        periode='Periode '+fromdate+' Sampai '+todate
+        searchresult=HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_searchresult = pd.DataFrame(searchresult)
+        mask = (df_searchresult['createdAt'] > fromdate) & (df_searchresult['createdAt'] <= todate)
+        df_searchresult = df_searchresult.loc[mask]
+        df_searchresult.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+        df_searchresult.index = range(1, df_searchresult.shape[0] + 1) 
+        return render(request, 'export/export_data_sebelum_clustering.html', {"periode":periode,"data":df_searchresult.to_html(classes = 'table display text-right" id = "table_id'),})
+    else:
+        displaydata=HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_displaydata = pd.DataFrame(displaydata)
+        df_displaydata.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+        df_displaydata.index = range(1, df_displaydata.shape[0] + 1) 
+        return render(request, 'export/export_data_sebelum_clustering.html', {"data":df_displaydata.to_html(classes = 'table display text-right" id = "table_id'),})
+    
+    # data_mentah = HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+    # df_data_mentah = pd.DataFrame(data_mentah)
+    # df_data_mentah.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+    # df_data_mentah.index = range(1, df_data_mentah.shape[0] + 1) 
+
+    # context = {
+    #     'df_data_mentah': df_data_mentah.to_html(classes = 'table display text-right" id = "table_id'),
+    # }
+    
+    # template = "export/export_data_sebelum_clustering.html"
+    # return render(request, template, context)
+    # if request.method=='POST':
+    #     fromdate=request.POST.get("fromdate")
+    #     todate=request.POST.get("todate")
+    #     try:
+    #         data_mentah = HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna').filter(createdAt__range=[fromdate, todate])
+    #         df_data_mentah = pd.DataFrame(data_mentah)
+    #         df_data_mentah.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+    #         df_data_mentah.index = range(1, df_data_mentah.shape[0] + 1) 
+    #     except:
+    #         df_data_mentah=None
+    #     return redirect(request, 'display.html', {'df_data_mentah':df_data_mentah})
+    # else:
+        
+    # # # data_mentah = HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+    # # # df_data_mentah = pd.DataFrame(data_mentah)
+    # # # df_data_mentah.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+    # # form = ExportDataForm(request.POST or None)
+    # # if form.is_valid():
+    # #     fromdate=request.POST.get("fromdate")
+    # #     todate=request.POST.get("todate")
+
+    # #     data_mentah = HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna').filter(createdAt__range=[fromdate, todate])
+    # #     df_data_mentah = pd.DataFrame(data_mentah)
+    # #     df_data_mentah.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
+
+    # #     df_data_mentah.index = range(1, df_data_mentah.shape[0] + 1) 
+    # #     # df_data_mentah.to_csv (r'C:\Users\LENOVO\Downloads\Data-sebelum-clustering2.csv', index = True, header=True)
+    # #     # return HttpResponseRedirect(reverse('app:list-pertanyaan'))
+    #     context = {
+    #     }
+        
+    #     template = "export/export_data_sebelum_clustering.html"
+    #     return render(request, template, context)
+
+
+
+
+
+
+
+
+@login_required(login_url="/login/")
+def exportdatahasilclustering(request):
+    if request.method=='POST':
+        fromdate=request.POST.get("fromdate")
+        todate=request.POST.get("todate")
+        periode='Periode '+fromdate+' Sampai '+todate
+        umur = HasilDeteksi.objects.values('pengguna_id__umur', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_umur = pd.DataFrame(umur)
+        mask = (df_umur['createdAt'] > fromdate) & (df_umur['createdAt'] <= todate)
+        df_umur = df_umur.loc[mask]
+        df_umur.drop('createdAt', inplace=True, axis=1)
+        df_umur.columns = ['Umur']
+        df=pd.DataFrame(df_umur)
+
+
+        jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_jenkel = pd.DataFrame(jenkel)
+        mask = (df_jenkel['createdAt'] > fromdate) & (df_jenkel['createdAt'] <= todate)
+        df_jenkel = df_jenkel.loc[mask]
+        df_jenkel.drop('createdAt', inplace=True, axis=1)
+        mapping = {'Laki-laki': 1, 'Perempuan': 2}
+        df_jenkel['Jenis Kelamin'] = df_jenkel.replace({'pengguna_id__jenis_kelamin': mapping})
+        df_jenkel.drop('pengguna_id__jenis_kelamin', inplace=True, axis=1)
+        df['Jenis Kelamin'] = df_jenkel[['Jenis Kelamin']]
+
+
+        pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_pekerjaan = pd.DataFrame(pekerjaan)
+        mask = (df_pekerjaan['createdAt'] > fromdate) & (df_pekerjaan['createdAt'] <= todate)
+        df_pekerjaan = df_pekerjaan.loc[mask]
+        df_pekerjaan.drop('createdAt', inplace=True, axis=1)
+        mapping = {'Kerja': 1, 'Pelajar/Mahasiswa': 2, 'Pelajar/Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
+        df_pekerjaan['Status Pekerjaan'] = df_pekerjaan.replace({'pengguna_id__pekerjaan': mapping})
+        df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
+        df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
+
+                
+        tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        mask = (df_tingkatdepresi['createdAt'] > fromdate) & (df_tingkatdepresi['createdAt'] <= todate)
+        df_tingkatdepresi = df_tingkatdepresi.loc[mask]
+        df_tingkatdepresi.drop('createdAt', inplace=True, axis=1)
+        mapping = {'Tidak Depresi': 1, 'Depresi Ringan': 2, 'Depresi Sedang': 3, 'Depresi Berat': 4}
+        df_tingkatdepresi['Tingkat Depresi'] = df_tingkatdepresi.replace({'tingkatdepresi_id__nama_depresi': mapping})
+        df_tingkatdepresi.drop('tingkatdepresi_id__nama_depresi', inplace=True, axis=1)
+        df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+        df.index = range(1, df.shape[0] + 1) 
+
+
+        # tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id').order_by('pengguna','-createdAt').distinct('pengguna')
+        # df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        # df_tingkatdepresi.columns = ['Tingkat Depresi']
+        # df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
+    
+        #Transform the data
+
+        scaler = preprocessing.MinMaxScaler()
+        features_normal2 = scaler.fit_transform(df)
+
+        pca = PCA(2)
+        features_normal = pca.fit_transform(features_normal2)
+
+
+        scoreDBI = [None] * 10
+        for i in range(2, 10):
+            kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
+            DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
+            scoreDBI[i] = DBI
+
+        del scoreDBI[0:2]
+        get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
+
+        kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(features_normal)
+
+        # label = kmeans.fit(features_normal2)
+        label = kmeans.fit_predict(features_normal)
+
+
+        #Getting the Centroids
+        centroids = kmeans.cluster_centers_
+        u_labels = np.unique(label)
+        
+        #plotting the results:
+        
+        for i in u_labels:
+            plt.scatter(features_normal[label == i , 0] , features_normal[label == i , 1] , label = i)
+            plt.xlabel('Principal Component 1')
+            plt.ylabel('Principal Component 2')
+
+        # plt.scatter(centroids[:,0] , centroids[:,1], s=10, marker=('x'), color='black')
+        plt.legend()
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_all_export = base64.b64encode(image_png)
+        graphic_all_export = graphic_all_export.decode('utf-8')
+        pylab.close()
+
+        labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
+        labels.index = range(1, labels.shape[0] + 1) 
+        labeled_export = pd.concat((df,labels),axis=1)
+        labeled_export = labeled_export.rename({0:'labels'},axis=1)
+
+        mapping = {1: 'Laki-laki', 2: 'Perempuan'}
+        labeled_export = labeled_export.replace({'Jenis Kelamin': mapping}) 
+
+        mapping = {1: 'Kerja', 2: 'Pelajar/Mahasiswa', 3: 'Pelajar/Mahasiswa dan Kerja', 4: 'Tidak Kerja'}
+        labeled_export = labeled_export.replace({'Status Pekerjaan': mapping})
+
+        mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
+        labeled_export = labeled_export.replace({'Tingkat Depresi': mapping})
+
+        labeled_export.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']
+        
+        nama = HasilDeteksi.objects.values('pengguna_id__nama', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_nama = pd.DataFrame(nama)
+        mask = (df_nama['createdAt'] > fromdate) & (df_nama['createdAt'] <= todate)
+        df_nama = df_nama.loc[mask]
+        df_nama.drop('createdAt', inplace=True, axis=1)
+        df_nama.index = range(1, df_nama.shape[0] + 1) 
+        df_nama.columns = ['Nama']
+        labeled_export.insert(0, 'Nama', df_nama)
+
+        tanggal = HasilDeteksi.objects.values('createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tanggal = pd.DataFrame(tanggal)
+        mask = (df_tanggal['createdAt'] > fromdate) & (df_tanggal['createdAt'] <= todate)
+        df_tanggal = df_tanggal.loc[mask]
+        df_tanggal.index = range(1, df_tanggal.shape[0] + 1) 
+        df_tanggal.columns = ['Tanggal Deteksi Dini Depresi']
+        labeled_export.insert(5, 'Tanggal Deteksi Dini Depresi', df_tanggal)
+        # idd = HasilDeteksi.objects.values('pengguna_id')
+        # df_id = pd.DataFrame(idd)
+        # df_id.columns = ['id']
+        # labeled.insert(0, 'id', df_id)
+        
+        labeled_export.index = range(1, labeled_export.shape[0] + 1) 
+
+        # count = labeled_export.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']).size().reset_index(name='Jumlah')
+        # group3_export = pd.DataFrame(count)
+        # group3_export.index = range(1, group3_export.shape[0] + 1) 
+        return render(request, 'export/export_data_hasil_clustering.html', {"periode":periode,"data":labeled_export.to_html(classes = 'table display text-right" id = "table_id'),})
+    else:
+        umur = HasilDeteksi.objects.values('pengguna_id__umur').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_umur = pd.DataFrame(umur)
+        df_umur.columns = ['Umur']
+        df=pd.DataFrame(df_umur)
+
+
+        jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_jenkel = pd.DataFrame(jenkel)
+        mapping = {'Laki-laki': 1, 'Perempuan': 2}
+        df_jenkel['Jenis Kelamin'] = df_jenkel.replace({'pengguna_id__jenis_kelamin': mapping})
+        df_jenkel.drop('pengguna_id__jenis_kelamin', inplace=True, axis=1)
+        df['Jenis Kelamin'] = df_jenkel[['Jenis Kelamin']]
+
+
+        pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_pekerjaan = pd.DataFrame(pekerjaan)
+        mapping = {'Kerja': 1, 'Pelajar/Mahasiswa': 2, 'Pelajar/Mahasiswa dan Kerja': 3, 'Tidak Kerja': 4}
+        df_pekerjaan['Status Pekerjaan'] = df_pekerjaan.replace({'pengguna_id__pekerjaan': mapping})
+        df_pekerjaan.drop('pengguna_id__pekerjaan', inplace=True, axis=1)
+        df['Status Pekerjaan'] = df_pekerjaan[['Status Pekerjaan']]
+
+        
+        tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        mapping = {'Tidak Depresi': 1, 'Depresi Ringan': 2, 'Depresi Sedang': 3, 'Depresi Berat': 4}
+        df_tingkatdepresi['Tingkat Depresi'] = df_tingkatdepresi.replace({'tingkatdepresi_id__nama_depresi': mapping})
+        df_tingkatdepresi.drop('tingkatdepresi_id__nama_depresi', inplace=True, axis=1)
+        df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
+
+        # tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id').order_by('pengguna','-createdAt').distinct('pengguna')
+        # df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        # df_tingkatdepresi.columns = ['Tingkat Depresi']
+        # df['Tingkat Depresi'] = df_tingkatdepresi[['Tingkat Depresi']]
+
+    
+        #Transform the data
+
+        scaler = preprocessing.MinMaxScaler()
+        features_normal2 = scaler.fit_transform(df)
+
+        pca = PCA(2)
+        features_normal = pca.fit_transform(features_normal2)
+
+
+        scoreDBI = [None] * 10
+        for i in range(2, 10):
+            kmeans_test = KMeans(n_clusters=i, random_state=0).fit(features_normal)
+            DBI = davies_bouldin_score(features_normal, kmeans_test.labels_)
+            scoreDBI[i] = DBI
+
+        del scoreDBI[0:2]
+        get_best_cluster = scoreDBI.index(min(scoreDBI)) + 2
+
+        kmeans = KMeans(n_clusters=get_best_cluster, random_state=0).fit(features_normal)
+
+        # label = kmeans.fit(features_normal2)
+        label = kmeans.fit_predict(features_normal)
+
+
+        #Getting the Centroids
+        centroids = kmeans.cluster_centers_
+        u_labels = np.unique(label)
+        
+        #plotting the results:
+        
+        for i in u_labels:
+            plt.scatter(features_normal[label == i , 0] , features_normal[label == i , 1] , label = i)
+            plt.xlabel('Principal Component 1')
+            plt.ylabel('Principal Component 2')
+
+        # plt.scatter(centroids[:,0] , centroids[:,1], s=10, marker=('x'), color='black')
+        plt.legend()
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_all_export = base64.b64encode(image_png)
+        graphic_all_export = graphic_all_export.decode('utf-8')
+        pylab.close()
+
+        labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
+        labeled_export_all = pd.concat((df,labels),axis=1)
+        labeled_export_all = labeled_export_all.rename({0:'labels'},axis=1)
+
+        mapping = {1: 'Laki-laki', 2: 'Perempuan'}
+        labeled_export_all = labeled_export_all.replace({'Jenis Kelamin': mapping}) 
+
+        mapping = {1: 'Kerja', 2: 'Pelajar/Mahasiswa', 3: 'Pelajar/Mahasiswa dan Kerja', 4: 'Tidak Kerja'}
+        labeled_export_all = labeled_export_all.replace({'Status Pekerjaan': mapping})
+
+        mapping = {1: '(1) Tidak Depresi', 2: '(2) Depresi Ringan', 3: '(3) Depresi Sedang', 4: '(4) Depresi Berat'}
+        labeled_export_all = labeled_export_all.replace({'Tingkat Depresi': mapping})
+
+        labeled_export_all.columns = ['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']
+        
+        nama = HasilDeteksi.objects.values('pengguna_id__nama').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_nama = pd.DataFrame(nama)
+        df_nama.columns = ['Nama']
+        labeled_export_all.insert(0, 'Nama', df_nama)
+
+        tanggal = HasilDeteksi.objects.values('createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tanggal = pd.DataFrame(tanggal)
+        df_tanggal.columns = ['Tanggal Deteksi Dini Depresi']
+        labeled_export_all.insert(5, 'Tanggal Deteksi Dini Depresi', df_tanggal)
+        # idd = HasilDeteksi.objects.values('pengguna_id')
+        # df_id = pd.DataFrame(idd)
+        # df_id.columns = ['id']
+        # labeled.insert(0, 'id', df_id)
+        
+        labeled_export_all.index = range(1, labeled_export_all.shape[0] + 1) 
+
+        # count = labeled_export.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']).size().reset_index(name='Jumlah')
+        # group3_export = pd.DataFrame(count)
+        # group3_export.index = range(1, group3_export.shape[0] + 1) 
+        return render(request, 'export/export_data_hasil_clustering.html', {"data":labeled_export_all.to_html(classes = 'table display text-right" id = "table_id'),})
+    
 
 
 
@@ -1362,14 +1716,14 @@ def detail_view_pengguna(request, id=None):
     print(id)
     qs = get_object_or_404(Pengguna, id=id)
     obj = HasilDeteksi.objects.filter(pengguna_id=id).order_by('-createdAt')
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(obj, 5)
-    # try:
-    #     obj = paginator.page(page)
-    # except PageNotAnInteger:
-    #     obj = paginator.page(1)
-    # except EmptyPage:
-    #     obj = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(obj, 5)
+    try:
+        obj = paginator.page(page)
+    except PageNotAnInteger:
+        obj = paginator.page(1)
+    except EmptyPage:
+        obj = paginator.page(paginator.num_pages)
 
     print(qs)
     context = {

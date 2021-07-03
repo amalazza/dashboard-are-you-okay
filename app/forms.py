@@ -168,3 +168,13 @@ class ArtikelModelForm(forms.ModelForm):
     class Meta:
         model = Artikel
         fields = "__all__"
+
+
+
+class ExportDataForm(forms.ModelForm):
+	# export_to_CSV = forms.BooleanField(required=False)
+	start_date = forms.DateTimeField(required=False)
+	end_date = forms.DateTimeField(required=False)
+	class Meta:
+		model = HasilDeteksi
+		fields = "__all__"

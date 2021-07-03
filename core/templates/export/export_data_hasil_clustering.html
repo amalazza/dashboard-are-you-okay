@@ -1,0 +1,102 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Export Data Depresi Hasil Clustering {{periode}}{% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="col-md-12">
+  <div class="card card-chart">
+    <div class="card-header card-header-tabs card-header-info" style="background: linear-gradient(60deg, #00918e, #19014c);">
+      <h4 class="card-title"> Export Data Depresi Hasil Clustering</h4>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">From:</label>
+                  <br>
+                  <input type="date" name="fromdate" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">To:</label>
+                  <br>
+                  <input type="date" name="todate" class="form-control">
+                </div>
+              </div>
+            </div>
+            <!-- <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">Jenis Format:</label>
+                  <br>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" id="csv" name="jenisformat" value="CSV">
+                    <label class="form-check-label" for="csv">CSV</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" id="pdf" name="jenisformat" value="PDF">
+                    <label class="form-check-label" for="pdf">PDF</label>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+          </form>
+          {{ data | safe }}
+          <!-- <table>
+            <tr>
+              <th>Nama</th>
+              <th>Umur</th>
+              <th>Jenis Kelamin</th>
+              <th>Status Pekerjaan</th>
+              <th>Tingkat Depresi</th>
+              <th>Tanggal</th>
+            </tr>
+            {% for result in data%}
+            <tr>
+              <td>{{result.pengguna_id__nama}}</td>
+              <td>{{result.pengguna_id__umur}}</td>
+              <td>{{result.pengguna_id__jenis_kelamin}}</td>
+              <td>{{result.pengguna_id__pekerjaan}}</td>
+              <td>{{result.tingkatdepresi_id__nama_depresi}}</td>
+              <td>{{result.createdAt}}</td>
+            </tr>
+            {% endfor %}
+          </table> -->
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <span class="text-danger"> *Note&nbsp;: </span> 
+            &nbsp;&nbsp;Clustering dapat dilakukan dengan minimal jumlah data depresi = 10
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script>
+    $(document).ready(function() {
+      //init DateTimePickers
+      md.initFormExtendedDatetimepickers();
+    });
+  </script>
+  
+{% endblock javascripts %}
