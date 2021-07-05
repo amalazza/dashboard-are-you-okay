@@ -84,7 +84,21 @@
           "searchable": false
         }],
         buttons: [
-            'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
+            'pageLength', 'copy', 'csv', 'excel', 
+            // {
+            //   extend: 'pdf',
+            //   customize: function (doc) {
+            //     doc.content.append(document.getElementById('grafik'));
+            //   }
+            // },
+            {
+              extend: 'print',
+              customize: function(win) {
+                var cookieValue = document.getElementById('grafik');
+                $(win.document.body).append(cookieValue); //after the table
+                // $(win.document.body).prepend('<html elements here>'); //before the table
+              }
+            }
             ],
       });
     });

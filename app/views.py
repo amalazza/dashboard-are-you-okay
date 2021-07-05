@@ -952,9 +952,10 @@ def index(request):
     depresiberat.columns = ['']
     depresiberat.index = ['' for _ in range(len(depresiberat))]
 
-    bar_depresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').annotate(bar_depresi=Count('tingkatdepresi_id'))
-    query_df_bar = pd.DataFrame(bar_depresi)
-    plt.bar(query_df_bar['tingkatdepresi_id__nama_depresi'], query_df_bar['bar_depresi']) 
+    bar_depresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi').order_by('pengguna','-createdAt').distinct('pengguna')
+    df_bar = pd.DataFrame(bar_depresi)
+    query_df_bar = df_bar.groupby(['tingkatdepresi_id__nama_depresi']).size().reset_index(name='Jumlah')
+    plt.bar(query_df_bar['tingkatdepresi_id__nama_depresi'], query_df_bar['Jumlah']) 
     plt.xlabel('Tingkat Depresi')
     plt.ylabel('Jumlah Depresi')
     plt.tight_layout()
@@ -967,7 +968,7 @@ def index(request):
     graphic_tingkatdepresi_bar = graphic_tingkatdepresi_bar.decode('utf-8')
     pylab.close()
 
-    plt.pie(query_df_bar['bar_depresi'],labels=query_df_bar['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
+    plt.pie(query_df_bar['Jumlah'],labels=query_df_bar['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
     plt.tight_layout()
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -1268,13 +1269,259 @@ def exportdatasebelumclustering(request):
         df_searchresult = df_searchresult.loc[mask]
         df_searchresult.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
         df_searchresult.index = range(1, df_searchresult.shape[0] + 1) 
-        return render(request, 'export/export_data_sebelum_clustering.html', {"periode":periode,"data":df_searchresult.to_html(classes = 'table display text-right" id = "table_id'),})
+
+
+        count = df_searchresult.groupby(['Tingkat Depresi']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Tingkat Depresi'], group['Jumlah']) 
+        plt.xlabel('Tingkat Depresi')
+        plt.ylabel('Jumlah Depresi')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_bar_sebelum_periode = base64.b64encode(image_png)
+        graphic_tingkatdepresi_bar_sebelum_periode = graphic_tingkatdepresi_bar_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Tingkat Depresi'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_pie_sebelum_periode = base64.b64encode(image_png)
+        graphic_tingkatdepresi_pie_sebelum_periode = graphic_tingkatdepresi_pie_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+
+        count = df_searchresult.groupby(['Umur']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Umur'], group['Jumlah']) 
+        plt.xlabel('Umur Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_bar_sebelum_periode = base64.b64encode(image_png)
+        graphic_umur_bar_sebelum_periode = graphic_umur_bar_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Umur'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_pie_sebelum_periode = base64.b64encode(image_png)
+        graphic_umur_pie_sebelum_periode = graphic_umur_pie_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+
+        count = df_searchresult.groupby(['Jenis Kelamin']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Jenis Kelamin'], group['Jumlah']) 
+        plt.xlabel('Jenis Kelamin Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_bar_sebelum_periode = base64.b64encode(image_png)
+        graphic_jeniskelamin_bar_sebelum_periode = graphic_jeniskelamin_bar_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Jenis Kelamin'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_pie_sebelum_periode = base64.b64encode(image_png)
+        graphic_jeniskelamin_pie_sebelum_periode = graphic_jeniskelamin_pie_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+
+        count = df_searchresult.groupby(['Status Pekerjaan']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Status Pekerjaan'], group['Jumlah']) 
+        plt.xlabel('Status Pekerjaan Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_bar_sebelum_periode = base64.b64encode(image_png)
+        graphic_statuspekerjaan_bar_sebelum_periode = graphic_statuspekerjaan_bar_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Status Pekerjaan'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_pie_sebelum_periode = base64.b64encode(image_png)
+        graphic_statuspekerjaan_pie_sebelum_periode = graphic_statuspekerjaan_pie_sebelum_periode.decode('utf-8')
+        pylab.close()
+
+
+
+        return render(request, 'export/export_data_sebelum_clustering.html', {"periode":periode,
+                        "data":df_searchresult.to_html(classes = 'table display text-right" id = "table_id'),
+                        'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar_sebelum_periode,
+                        'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie_sebelum_periode,
+                        'graphic_umur_bar': graphic_umur_bar_sebelum_periode,
+                        'graphic_umur_pie': graphic_umur_pie_sebelum_periode,
+                        'graphic_jeniskelamin_bar': graphic_jeniskelamin_bar_sebelum_periode,
+                        'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie_sebelum_periode,
+                        'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar_sebelum_periode,
+                        'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie_sebelum_periode,
+                        })
     else:
         displaydata=HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
         df_displaydata = pd.DataFrame(displaydata)
         df_displaydata.columns = ['Nama', 'Umur', 'Jenis Kelamin', 'Status Pekerjaan', 'Tingkat Depresi', 'Tanggal Deteksi Dini Depresi']
         df_displaydata.index = range(1, df_displaydata.shape[0] + 1) 
-        return render(request, 'export/export_data_sebelum_clustering.html', {"data":df_displaydata.to_html(classes = 'table display text-right" id = "table_id'),})
+
+
+        count = df_displaydata.groupby(['Tingkat Depresi']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Tingkat Depresi'], group['Jumlah']) 
+        plt.xlabel('Tingkat Depresi')
+        plt.ylabel('Jumlah Depresi')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_bar_sebelum_all = base64.b64encode(image_png)
+        graphic_tingkatdepresi_bar_sebelum_all = graphic_tingkatdepresi_bar_sebelum_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Tingkat Depresi'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_pie_sebelum_all = base64.b64encode(image_png)
+        graphic_tingkatdepresi_pie_sebelum_all = graphic_tingkatdepresi_pie_sebelum_all.decode('utf-8')
+        pylab.close()
+
+
+        count = df_displaydata.groupby(['Umur']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Umur'], group['Jumlah']) 
+        plt.xlabel('Umur Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_bar_sebelum_all = base64.b64encode(image_png)
+        graphic_umur_bar_sebelum_all = graphic_umur_bar_sebelum_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Umur'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_pie_sebelum_all = base64.b64encode(image_png)
+        graphic_umur_pie_sebelum_all = graphic_umur_pie_sebelum_all.decode('utf-8')
+        pylab.close()
+
+
+        count = df_displaydata.groupby(['Jenis Kelamin']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Jenis Kelamin'], group['Jumlah']) 
+        plt.xlabel('Jenis Kelamin Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_bar_sebelum_all = base64.b64encode(image_png)
+        graphic_jeniskelamin_bar_sebelum_all = graphic_jeniskelamin_bar_sebelum_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Jenis Kelamin'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_pie_sebelum_all = base64.b64encode(image_png)
+        graphic_jeniskelamin_pie_sebelum_all = graphic_jeniskelamin_pie_sebelum_all.decode('utf-8')
+        pylab.close()
+
+
+        count = df_displaydata.groupby(['Status Pekerjaan']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Status Pekerjaan'], group['Jumlah']) 
+        plt.xlabel('Status Pekerjaan Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_bar_sebelum_all = base64.b64encode(image_png)
+        graphic_statuspekerjaan_bar_sebelum_all = graphic_statuspekerjaan_bar_sebelum_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Status Pekerjaan'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_pie_sebelum_all = base64.b64encode(image_png)
+        graphic_statuspekerjaan_pie_sebelum_all = graphic_statuspekerjaan_pie_sebelum_all.decode('utf-8')
+        pylab.close()
+
+        periode='Periode Awal Sampai Akhir'
+
+        return render(request, 'export/export_data_sebelum_clustering.html', {
+                        "periode":periode,
+                        "data":df_displaydata.to_html(classes = 'table display text-right" id = "table_id'),
+                        'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar_sebelum_all,
+                        'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie_sebelum_all,
+                        'graphic_umur_bar': graphic_umur_bar_sebelum_all,
+                        'graphic_umur_pie': graphic_umur_pie_sebelum_all,
+                        'graphic_jeniskelamin_bar': graphic_jeniskelamin_bar_sebelum_all,
+                        'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie_sebelum_all,
+                        'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar_sebelum_all,
+                        'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie_sebelum_all,
+                        })
+
+
+        # return render(request, 'export/export_data_sebelum_clustering.html', {"data":df_displaydata.to_html(classes = 'table display text-right" id = "table_id'),})
     
     # data_mentah = HasilDeteksi.objects.values('pengguna_id__nama', 'pengguna_id__umur', 'pengguna_id__jenis_kelamin', 'pengguna_id__pekerjaan', 'tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
     # df_data_mentah = pd.DataFrame(data_mentah)
@@ -1426,8 +1673,8 @@ def exportdatahasilclustering(request):
         buffer.seek(0)
         image_png = buffer.getvalue()
         buffer.close()
-        graphic_all_export = base64.b64encode(image_png)
-        graphic_all_export = graphic_all_export.decode('utf-8')
+        graphic_all_export_hasil_periode = base64.b64encode(image_png)
+        graphic_all_export_hasil_periode = graphic_all_export_hasil_periode.decode('utf-8')
         pylab.close()
 
         labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
@@ -1472,7 +1719,182 @@ def exportdatahasilclustering(request):
         # count = labeled_export.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']).size().reset_index(name='Jumlah')
         # group3_export = pd.DataFrame(count)
         # group3_export.index = range(1, group3_export.shape[0] + 1) 
-        return render(request, 'export/export_data_hasil_clustering.html', {"periode":periode,"data":labeled_export.to_html(classes = 'table display text-right" id = "table_id'),})
+
+
+        count = labeled_export.groupby(['Klaster']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Klaster'], group['Jumlah']) 
+        plt.xlabel('Klaster')
+        plt.ylabel('Jumlah')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_kalster_bar_hasil_periode = base64.b64encode(image_png)
+        graphic_klaster_bar_hasil_periode = graphic_kalster_bar_hasil_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Klaster'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_klaster_pie_hasil_periode = base64.b64encode(image_png)
+        graphic_klaster_pie_hasil_periode = graphic_klaster_pie_hasil_periode.decode('utf-8')
+        pylab.close()
+
+
+        tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        mask = (df_tingkatdepresi['createdAt'] > fromdate) & (df_tingkatdepresi['createdAt'] <= todate)
+        df_tingkatdepresi = df_tingkatdepresi.loc[mask]
+        df_tingkatdepresi.drop('createdAt', inplace=True, axis=1)
+        count = df_tingkatdepresi.groupby(['tingkatdepresi_id__nama_depresi']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['tingkatdepresi_id__nama_depresi'], group['Jumlah']) 
+        plt.xlabel('Tingkat Depresi')
+        plt.ylabel('Jumlah Depresi')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_bar_hasil_periode = base64.b64encode(image_png)
+        graphic_tingkatdepresi_bar_hasil_periode = graphic_tingkatdepresi_bar_hasil_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_pie_hasil_periode = base64.b64encode(image_png)
+        graphic_tingkatdepresi_pie_hasil_periode = graphic_tingkatdepresi_pie_hasil_periode.decode('utf-8')
+        pylab.close()
+
+
+        umur = HasilDeteksi.objects.values('pengguna_id__umur', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_umur = pd.DataFrame(umur)
+        mask = (df_umur['createdAt'] > fromdate) & (df_umur['createdAt'] <= todate)
+        df_umur = df_umur.loc[mask]
+        df_umur.drop('createdAt', inplace=True, axis=1)
+        count = df_umur.groupby(['pengguna_id__umur']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__umur'], group['Jumlah']) 
+        plt.xlabel('Umur Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_bar_hasil_periode = base64.b64encode(image_png)
+        graphic_umur_bar_hasil_periode = graphic_umur_bar_hasil_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__umur'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_pie_hasil_periode = base64.b64encode(image_png)
+        graphic_umur_pie_hasil_periode = graphic_umur_pie_hasil_periode.decode('utf-8')
+        pylab.close()
+
+
+        jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_jenkel = pd.DataFrame(jenkel)
+        mask = (df_jenkel['createdAt'] > fromdate) & (df_jenkel['createdAt'] <= todate)
+        df_jenkel = df_jenkel.loc[mask]
+        df_jenkel.drop('createdAt', inplace=True, axis=1)
+        count = df_jenkel.groupby(['pengguna_id__jenis_kelamin']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__jenis_kelamin'], group['Jumlah']) 
+        plt.xlabel('Jenis Kelamin Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_bar_hasil_periode = base64.b64encode(image_png)
+        graphic_jeniskelamin_bar_hasil_periode = graphic_jeniskelamin_bar_hasil_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__jenis_kelamin'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_pie_hasil_periode = base64.b64encode(image_png)
+        graphic_jeniskelamin_pie_hasil_periode = graphic_jeniskelamin_pie_hasil_periode.decode('utf-8')
+        pylab.close()
+
+
+        pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_pekerjaan = pd.DataFrame(pekerjaan)
+        mask = (df_pekerjaan['createdAt'] > fromdate) & (df_pekerjaan['createdAt'] <= todate)
+        df_pekerjaan = df_pekerjaan.loc[mask]
+        df_pekerjaan.drop('createdAt', inplace=True, axis=1)
+        count = df_pekerjaan.groupby(['pengguna_id__pekerjaan']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__pekerjaan'], group['Jumlah']) 
+        plt.xlabel('Status Pekerjaan Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_bar_hasil_periode = base64.b64encode(image_png)
+        graphic_statuspekerjaan_bar_hasil_periode = graphic_statuspekerjaan_bar_hasil_periode.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__pekerjaan'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_pie_hasil_periode = base64.b64encode(image_png)
+        graphic_statuspekerjaan_pie_hasil_periode = graphic_statuspekerjaan_pie_hasil_periode.decode('utf-8')
+        pylab.close()
+
+
+
+        return render(request, 'export/export_data_hasil_clustering.html', {"periode":periode,
+                        "data":labeled_export.to_html(classes = 'table display text-right" id = "table_id'),
+                        'graphic_all_export': graphic_all_export_hasil_periode,
+                        'graphic_klaster_bar': graphic_klaster_bar_hasil_periode,
+                        'graphic_klaster_pie': graphic_klaster_pie_hasil_periode,
+                        'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar_hasil_periode,
+                        'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie_hasil_periode,
+                        'graphic_umur_bar': graphic_umur_bar_hasil_periode,
+                        'graphic_umur_pie': graphic_umur_pie_hasil_periode,
+                        'graphic_jeniskelamin_bar': graphic_jeniskelamin_bar_hasil_periode,
+                        'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie_hasil_periode,
+                        'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar_hasil_periode,
+                        'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie_hasil_periode,
+                        })
+
+
+
+        # return render(request, 'export/export_data_hasil_clustering.html', {"periode":periode,"data":labeled_export.to_html(classes = 'table display text-right" id = "table_id'),})
     else:
         umur = HasilDeteksi.objects.values('pengguna_id__umur').order_by('pengguna','-createdAt').distinct('pengguna')
         df_umur = pd.DataFrame(umur)
@@ -1553,8 +1975,8 @@ def exportdatahasilclustering(request):
         buffer.seek(0)
         image_png = buffer.getvalue()
         buffer.close()
-        graphic_all_export = base64.b64encode(image_png)
-        graphic_all_export = graphic_all_export.decode('utf-8')
+        graphic_all_export_hasil_all = base64.b64encode(image_png)
+        graphic_all_export_hasil_all = graphic_all_export_hasil_all.decode('utf-8')
         pylab.close()
 
         labels = pd.DataFrame(kmeans.labels_) #This is where the label output of the KMeans we just ran lives. Make it a dataframe so we can concatenate back to the original data
@@ -1591,7 +2013,171 @@ def exportdatahasilclustering(request):
         # count = labeled_export.groupby(['Umur', 'Jenis Kelamin', 'Status Pekerjaan', '(Level) Tingkat Depresi', 'Klaster']).size().reset_index(name='Jumlah')
         # group3_export = pd.DataFrame(count)
         # group3_export.index = range(1, group3_export.shape[0] + 1) 
-        return render(request, 'export/export_data_hasil_clustering.html', {"data":labeled_export_all.to_html(classes = 'table display text-right" id = "table_id'),})
+
+
+        count = labeled_export_all.groupby(['Klaster']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['Klaster'], group['Jumlah']) 
+        plt.xlabel('Klaster')
+        plt.ylabel('Jumlah')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_kalster_bar_hasil_all = base64.b64encode(image_png)
+        graphic_klaster_bar_hasil_all = graphic_kalster_bar_hasil_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['Klaster'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_klaster_pie_hasil_all = base64.b64encode(image_png)
+        graphic_klaster_pie_hasil_all = graphic_klaster_pie_hasil_all.decode('utf-8')
+        pylab.close()
+
+
+        tingkatdepresi = HasilDeteksi.objects.values('tingkatdepresi_id__nama_depresi', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_tingkatdepresi = pd.DataFrame(tingkatdepresi)
+        count = df_tingkatdepresi.groupby(['tingkatdepresi_id__nama_depresi']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['tingkatdepresi_id__nama_depresi'], group['Jumlah']) 
+        plt.xlabel('Tingkat Depresi')
+        plt.ylabel('Jumlah Depresi')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_bar_hasil_all = base64.b64encode(image_png)
+        graphic_tingkatdepresi_bar_hasil_all = graphic_tingkatdepresi_bar_hasil_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['tingkatdepresi_id__nama_depresi'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_tingkatdepresi_pie_hasil_all = base64.b64encode(image_png)
+        graphic_tingkatdepresi_pie_hasil_all = graphic_tingkatdepresi_pie_hasil_all.decode('utf-8')
+        pylab.close()
+
+
+        umur = HasilDeteksi.objects.values('pengguna_id__umur', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_umur = pd.DataFrame(umur)
+        count = df_umur.groupby(['pengguna_id__umur']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__umur'], group['Jumlah']) 
+        plt.xlabel('Umur Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_bar_hasil_all = base64.b64encode(image_png)
+        graphic_umur_bar_hasil_all = graphic_umur_bar_hasil_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__umur'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_umur_pie_hasil_all = base64.b64encode(image_png)
+        graphic_umur_pie_hasil_all = graphic_umur_pie_hasil_all.decode('utf-8')
+        pylab.close()
+
+
+        jenkel = HasilDeteksi.objects.values('pengguna_id__jenis_kelamin', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_jenkel = pd.DataFrame(jenkel)
+        count = df_jenkel.groupby(['pengguna_id__jenis_kelamin']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__jenis_kelamin'], group['Jumlah']) 
+        plt.xlabel('Jenis Kelamin Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_bar_hasil_all = base64.b64encode(image_png)
+        graphic_jeniskelamin_bar_hasil_all = graphic_jeniskelamin_bar_hasil_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__jenis_kelamin'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_jeniskelamin_pie_hasil_all = base64.b64encode(image_png)
+        graphic_jeniskelamin_pie_hasil_all = graphic_jeniskelamin_pie_hasil_all.decode('utf-8')
+        pylab.close()
+
+
+        pekerjaan = HasilDeteksi.objects.values('pengguna_id__pekerjaan', 'createdAt').order_by('pengguna','-createdAt').distinct('pengguna')
+        df_pekerjaan = pd.DataFrame(pekerjaan)
+        count = df_pekerjaan.groupby(['pengguna_id__pekerjaan']).size().reset_index(name='Jumlah')
+        group = pd.DataFrame(count)
+        plt.bar(group['pengguna_id__pekerjaan'], group['Jumlah']) 
+        plt.xlabel('Status Pekerjaan Pengguna')
+        plt.ylabel('Jumlah Pengguna')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_bar_hasil_all = base64.b64encode(image_png)
+        graphic_statuspekerjaan_bar_hasil_all = graphic_statuspekerjaan_bar_hasil_all.decode('utf-8')
+        pylab.close()
+
+        plt.pie(group['Jumlah'],labels=group['pengguna_id__pekerjaan'],autopct='%1.2f%%')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+        graphic_statuspekerjaan_pie_hasil_all = base64.b64encode(image_png)
+        graphic_statuspekerjaan_pie_hasil_all = graphic_statuspekerjaan_pie_hasil_all.decode('utf-8')
+        pylab.close()
+
+        periode='Periode Awal Sampai Akhir'
+
+        return render(request, 'export/export_data_hasil_clustering.html', {
+                        'periode': periode,
+                        "data":labeled_export_all.to_html(classes = 'table display text-right" id = "table_id'),
+                        'graphic_all_export': graphic_all_export_hasil_all,
+                        'graphic_klaster_bar': graphic_klaster_bar_hasil_all,
+                        'graphic_klaster_pie': graphic_klaster_pie_hasil_all,
+                        'graphic_tingkatdepresi_bar': graphic_tingkatdepresi_bar_hasil_all,
+                        'graphic_tingkatdepresi_pie': graphic_tingkatdepresi_pie_hasil_all,
+                        'graphic_umur_bar': graphic_umur_bar_hasil_all,
+                        'graphic_umur_pie': graphic_umur_pie_hasil_all,
+                        'graphic_jeniskelamin_bar': graphic_jeniskelamin_bar_hasil_all,
+                        'graphic_jeniskelamin_pie': graphic_jeniskelamin_pie_hasil_all,
+                        'graphic_statuspekerjaan_bar': graphic_statuspekerjaan_bar_hasil_all,
+                        'graphic_statuspekerjaan_pie': graphic_statuspekerjaan_pie_hasil_all,
+                        })
+
+
+
+        # return render(request, 'export/export_data_hasil_clustering.html', {"data":labeled_export_all.to_html(classes = 'table display text-right" id = "table_id'),})
     
 
 

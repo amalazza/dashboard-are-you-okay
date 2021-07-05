@@ -15,65 +15,131 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card-body">
-          <form method="POST">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="bmd-label-floating">From:</label>
-                  <br>
-                  <input type="date" name="fromdate" class="form-control">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="card-title">Cari Berdasarkan Periode</h4>
+              <br>
+              <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="bmd-label-floating">From:</label>
+                      <br>
+                      <input type="date" name="fromdate" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="bmd-label-floating">To:</label>
+                      <br>
+                      <input type="date" name="todate" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary pull-right">Submit</button>
+              </form>
+            </div>
+          </div>
+          <!-- <hr> -->
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="card-title">Hasil Pencarian {{ periode }}</h4>
+              <br>
+              {{ data | safe }}
+              <br>
+              <div class="row" id="grafik">
+                <div class="col-md-12">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Sebaran Data Depresi</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-12">
+                        <center>
+                        <img src="data:image/png;base64,{{graphic_all_export|safe}}" class="img-fluid">
+                        </center>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Data Klaster dengan Jumlah Pengguna</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_klaster_pie|safe}}" class="img-fluid">
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_klaster_bar|safe}}" class="img-fluid">
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Data Umur dengan Jumlah Pengguna</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_umur_pie|safe}}" class="img-fluid">
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_umur_bar|safe}}" class="img-fluid">
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Data Jenis Kelamin dengan Jumlah Pengguna</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_jeniskelamin_pie|safe}}" class="img-fluid">
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_jeniskelamin_bar|safe}}" class="img-fluid">
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Data Status Pekerjaan dengan Jumlah Pengguna</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_statuspekerjaan_pie|safe}}" class="img-fluid">
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_statuspekerjaan_bar|safe}}" class="img-fluid">
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <center>
+                          <h4 class="card-title">Data Tingkat Depresi dengan Jumlah Pengguna</h4>
+                        </center>
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_tingkatdepresi_pie|safe}}" class="img-fluid">
+                      </div>
+                      <div class="col-md-6">
+                        <img src="data:image/png;base64,{{graphic_tingkatdepresi_bar|safe}}" class="img-fluid">
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="bmd-label-floating">To:</label>
-                  <br>
-                  <input type="date" name="todate" class="form-control">
-                </div>
-              </div>
-            </div>
-            <!-- <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="bmd-label-floating">Jenis Format:</label>
-                  <br>
-                  <div class="form-check form-check-inline">
-                    <input type="radio" id="csv" name="jenisformat" value="CSV">
-                    <label class="form-check-label" for="csv">CSV</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type="radio" id="pdf" name="jenisformat" value="PDF">
-                    <label class="form-check-label" for="pdf">PDF</label>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            <button type="submit" class="btn btn-primary pull-right">Submit</button>
-          </form>
-          {{ data | safe }}
-          <!-- <table>
-            <tr>
-              <th>Nama</th>
-              <th>Umur</th>
-              <th>Jenis Kelamin</th>
-              <th>Status Pekerjaan</th>
-              <th>Tingkat Depresi</th>
-              <th>Tanggal</th>
-            </tr>
-            {% for result in data%}
-            <tr>
-              <td>{{result.pengguna_id__nama}}</td>
-              <td>{{result.pengguna_id__umur}}</td>
-              <td>{{result.pengguna_id__jenis_kelamin}}</td>
-              <td>{{result.pengguna_id__pekerjaan}}</td>
-              <td>{{result.tingkatdepresi_id__nama_depresi}}</td>
-              <td>{{result.createdAt}}</td>
-            </tr>
-            {% endfor %}
-          </table> -->
+          </div>
         </div>
         <div class="card-footer">
           <div class="stats">
